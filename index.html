@@ -481,7 +481,7 @@ textarea{min-height:80px;resize:vertical}
       function next(){
         if(i>=DATA.keys.length)return Promise.reject(new Error('bad'));
         var e=DATA.keys[i++];
-        return CS.decrypt({name:'AES-GCM',iv:ub(e.iv)},k,ub(e.wk)).then(function(raw){return new Uint8Array(raw)},next);
+        return CS.decrypt({name:'AES-GCM',iv:ub(e.iv)},k,ub(e.wk)).then(function(raw){MATCH_ID=e.id;return new Uint8Array(raw)},next);
       }
       return next();
     }).then(function(raw){
@@ -502,10 +502,21 @@ textarea{min-height:80px;resize:vertical}
     $('shell').classList.remove('locked');$('gate').hidden=true;render();
     var v=$('giulia-video');if(v){var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){})}
   }
+  var MATCH_ID=null;
+  // solo sul sito indipendente: registra su GoatCounter quale famiglia è entrata (mai il codice amministratore)
+  function logAccess(code){
+    if(!window.GC_SITE)return;
+    var who=MATCH_ID==='ADMIN'?'Amministratore':norm(code).replace(/^ABRA/,'');
+    who=who.charAt(0)+who.slice(1).toLowerCase();
+    var tries=0;(function send(){
+      if(window.goatcounter&&window.goatcounter.count){try{window.goatcounter.count({path:'accesso-'+who.toLowerCase(),title:'Accesso: '+who,event:true})}catch(_){}return}
+      if(++tries<20)setTimeout(send,500);
+    })();
+  }
   function tryCode(code,silent){
     var st=$('gate-status'),btn=$('gate-go');
     if(!silent){st.className='status';st.textContent='Verifica in corso…';btn.disabled=true}
-    return unlock(code).then(function(p){STATE=p;lsSet(code);showContent()}).catch(function(err){
+    return unlock(code).then(function(p){STATE=p;lsSet(code);showContent();logAccess(code)}).catch(function(err){
       btn.disabled=false;
       if(silent){lsSet(null);st.textContent='';return}
       st.className='status err';
