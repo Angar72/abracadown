@@ -1,4 +1,4 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#120607"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Abracadown"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><script data-goatcounter="https://abracadown.goatcounter.com/count" data-goatcounter-settings='{"allow_local":false}' async src="https://gc.zgo.at/count.js"></script></head><body><title>Calendario Abracadown</title>
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#120607"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Abracadown"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><script>window.GC_SITE="abracadown"</script><script data-goatcounter="https://abracadown.goatcounter.com/count" data-goatcounter-settings='{"allow_local":false}' async src="https://gc.zgo.at/count.js"></script></head><body><title>Calendario Abracadown</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Dancing+Script:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap">
 <style id="page-style">
 /* Layout: locandina da palcoscenico — insegna con lampadine, Giulia che presenta, cartellone con date in box rossi come il tour 2026/2027. Tema unico scuro, scelto di proposito. */
@@ -330,7 +330,16 @@ textarea{min-height:80px;resize:vertical}
     $('general-note').hidden=!STATE.note;
     var u=parse(STATE.updated||new Date().toISOString().slice(0,10));
     var st=STATE.stats, sh='';
-    if(st&&typeof st.clicks==='number'){
+    if(window.GC_SITE){
+      // sito indipendente: contatore GoatCounter letto in tempo reale
+      sh='<div class="stats"><span class="stats-n" id="gc-n">…</span><span>visite al calendario <small>(aggiornato in tempo reale)</small></span></div>';
+      setTimeout(function(){
+        fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/TOTAL.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){
+          var el=document.getElementById('gc-n'); if(!el)return;
+          if(j&&j.count!=null){el.textContent=String(j.count).replace(/[   ,]/g,'.')}else{el.parentNode.hidden=true}
+        }).catch(function(){var el=document.getElementById('gc-n');if(el)el.parentNode.hidden=true});
+      },1500);
+    } else if(st&&typeof st.clicks==='number'&&st.clicks>0){
       sh='<div class="stats"><span class="stats-n">'+st.clicks.toLocaleString('it-IT')+'</span><span>volte aperto il calendario dal link'+(st.at?' <small>(dato del '+esc(st.at)+')</small>':'')+'</span></div>';
     }
     $('foot').innerHTML=sh+'<div>Ultimo aggiornamento: '+u.getDate()+' '+MONTHS[u.getMonth()]+' '+u.getFullYear()+'.</div>';
