@@ -336,7 +336,8 @@ textarea{min-height:80px;resize:vertical}
       setTimeout(function(){
         fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/TOTAL.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){
           var el=document.getElementById('gc-n'); if(!el)return;
-          if(j&&j.count!=null){el.textContent=String(j.count).replace(/[   ,]/g,'.')}else{el.parentNode.hidden=true}
+          var f=function(v){return String(v).replace(/[^0-9]/g,'').replace(/\B(?=(\d{3})+$)/g,'.')};
+          if(j&&j.count!=null){el.textContent=f(j.count);var u=document.getElementById('gc-u');if(u&&j.count_unique!=null)u.textContent=' · '+f(j.count_unique)+(f(j.count_unique)==='1'?' persona':' persone diverse')}else{el.parentNode.hidden=true}
         }).catch(function(){var el=document.getElementById('gc-n');if(el)el.parentNode.hidden=true});
       },1500);
     } else if(st&&typeof st.clicks==='number'&&st.clicks>0){
