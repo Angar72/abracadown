@@ -332,7 +332,7 @@ textarea{min-height:80px;resize:vertical}
     var st=STATE.stats, sh='';
     if(window.GC_SITE){
       // sito indipendente: contatore GoatCounter letto in tempo reale
-      sh='<div class="stats"><span class="stats-n" id="gc-n">…</span><span>visite al calendario <small>(aggiornato in tempo reale)</small></span></div>';
+      sh='<div class="stats"><span class="stats-n" id="gc-n">…</span><span>visite al calendario<span id="gc-u"></span> <small>(in tempo reale)</small></span></div>';
       setTimeout(function(){
         fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/TOTAL.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){
           var el=document.getElementById('gc-n'); if(!el)return;
