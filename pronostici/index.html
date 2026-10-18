@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Schedine in diretta</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1d1d1b;--mute:#6b6a65;--line:#e4e2db;--accent:#1f6f4a;--ok:#1f8a4c;--bad:#c0392b;--warn:#b7791f;--live:#d64532}
+@media (prefers-color-scheme:dark){:root{--bg:#141413;--card:#1e1e1c;--ink:#f1efe8;--mute:#a3a198;--line:#33322f;--accent:#5fbf8f;--ok:#4cc27e;--bad:#ef6a5b;--warn:#e0a84a;--live:#ff6b57}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+h1{font-size:20px;margin:0}
+.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;cursor:pointer}
+.stamp{color:var(--mute);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.card.win{border-color:var(--ok)}.card.lose{border-color:var(--bad)}.card.rec{border-color:var(--warn)}
+.ttl{font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute);margin-bottom:8px}
+.leg{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-top:1px solid var(--line)}
+.leg:first-of-type{border-top:0}
+.teams{font-weight:600;min-width:0}
+.score{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap;text-align:right}
+.sub{color:var(--mute);font-size:13px}
+.tip{white-space:nowrap;text-align:right;font-size:14px}
+.ok{color:var(--ok);font-weight:700}.ko{color:var(--bad);font-weight:700}
+.live{color:var(--live);font-weight:700}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--live);margin-right:5px;animation:p 1.4s infinite}
+@keyframes p{50%{opacity:.25}}
+.money{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;background:var(--bg);border-radius:10px;padding:10px;text-align:center}
+.money span{display:block;color:var(--mute);font-size:12px}.money b{font-size:17px;font-variant-numeric:tabular-nums}
+.esito{margin-top:10px;font-size:15px}
+.empty{color:var(--mute)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div><h1>Schedine in diretta</h1><div class="stamp" id="stamp">Carico i risultati…</div></div>
+    <button class="btn" id="go">Aggiorna</button>
+  </header>
+  <div id="main"></div>
+  <p class="sub">I risultati arrivano da un servizio gratuito di punteggi in diretta (ESPN) e si aggiornano da soli ogni minuto mentre la pagina è aperta. Le schedine arrivano dalla pagina Pronostici, con il pulsante «Risultati in diretta».</p>
+</div>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const euro = v => v.toLocaleString("it-IT", { style: "currency", currency: "EUR" });
+  const q2 = v => v.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const LG = { it_1: "ita.1", it_2: "ita.2", en_1: "eng.1", es_1: "esp.1", de_1: "ger.1", fr_1: "fra.1", nl_1: "ned.1", pt_1: "por.1", be_1: "bel.1", no_1: "nor.1", se_1: "swe.1", cl: "uefa.champions" };
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+  // schedine passate nell'indirizzo (dopo il #); se manca, uso le ultime ricevute su questo telefono
+  let data = null;
+  try { if (location.hash.length > 2) { data = JSON.parse(decodeURIComponent(location.hash.slice(1))); store.set("pl.last", JSON.stringify(data)); } } catch (e) {}
+  if (!data) { try { data = JSON.parse(store.get("pl.last") || "null"); } catch (e) {} }
+
+  // abbinamento dei nomi: i dati della pagina Pronostici e ESPN scrivono le squadre in modo diverso
+  const ALIAS = { "psg": "paris saint germain", "inter": "internazionale", "man united": "manchester united", "man utd": "manchester united", "man city": "manchester city",
+    "wolves": "wolverhampton", "spurs": "tottenham", "atletico": "atletico madrid", "bayern": "bayern munich", "gladbach": "monchengladbach",
+    "sporting": "sporting cp", "nott'm forest": "nottingham forest", "athletic": "athletic club", "betis": "real betis", "leverkusen": "bayer leverkusen" };
+  const STOP = new Set(["fc", "ac", "cf", "sc", "afc", "ssc", "as", "us", "ss", "calcio", "club", "de", "sk", "fk", "if", "bk", "ik", "cd", "rc", "ud", "sd", "ca", "and", "the", "1907", "1909", "1913", "1846", "bc", "sv", "vfb", "vfl", "tsg", "fsv", "rcd", "aj", "ogc", "losc", "stade", "real"]);
+  const norm = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ø/g, "o").replace(/æ/g, "ae").replace(/å/g, "a").replace(/&/g, " and ").replace(/[^a-z0-9' ]/g, " ").replace(/\s+/g, " ").trim();
+  const toks = s => { const n = norm(s); return (ALIAS[n] || n).split(" ").filter(w => w.length >= 3 && !STOP.has(w)); };
+  function sim(mine, theirs) {
+    const a = toks(mine), b = toks(theirs);
+    if (!a.length || !b.length) return norm(mine) === norm(theirs) ? 1 : 0;
+    let s = 0;
+    a.forEach(w => { if (b.some(x => x === w || (w.length >= 4 && (x.includes(w) || w.includes(x)) && x.length >= 4))) s++; });
+    return s / a.length;
+  }
+
+  const ymd = d => d.replace(/-/g, "");
+  const addDays = (d, n) => { const x = new Date(d + "T12:00:00Z"); x.setUTCDate(x.getUTCDate() + n); return x.toISOString().slice(0, 10); };
+  const cache = {};
+  async function board(lg, d) {
+    const key = lg + d;
+    if (!cache[key]) cache[key] = fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/${lg}/scoreboard?dates=${ymd(d)}`, { cache: "no-store" })
+      .then(r => r.ok ? r.json() : { events: [] }).then(j => j.events || []).catch(() => null);
+    return cache[key];
+  }
+  function pick(events, h, a) {
+    let best = null, bs = 0;
+    (events || []).forEach(e => {
+      const c = e.competitions?.[0]?.competitors || [];
+      const H = c.find(x => x.homeAway === "home"), A = c.find(x => x.homeAway === "away");
+      if (!H || !A) return;
+      const nh = [H.team.displayName, H.team.shortDisplayName, H.team.name].filter(Boolean), na = [A.team.displayName, A.team.shortDisplayName, A.team.name].filter(Boolean);
+      const sh = Math.max(...nh.map(n => sim(h, n))), sa = Math.max(...na.map(n => sim(a, n)));
+      if (sh > 0 && sa > 0 && sh + sa > bs) { bs = sh + sa; best = { e, H, A }; }
+    });
+    return best;
+  }
+  // stato di una partita: {st:"pre"|"in"|"post"|"rinviata", hg, ag, txt}
+  async function result(id, h, a, d) {
+    const lg = LG[id]; if (!lg) return { st: "nd", txt: "campionato non coperto" };
+    let m = null, failed = false;
+    for (const day of [d, addDays(d, -1), addDays(d, 1)]) {
+      const ev = await board(lg, day);
+      if (ev === null) { failed = true; continue; }
+      m = pick(ev, h, a); if (m) break;
+    }
+    if (!m) return { st: "nd", txt: failed ? "risultati non raggiungibili, riprovo tra poco" : "partita non trovata" };
+    const s = m.e.status?.type || {}, hg = +m.H.score || 0, ag = +m.A.score || 0;
+    if (/postpon|cancel|abandon|suspend/i.test(s.name || s.description || "")) return { st: "rinviata", txt: "rinviata o sospesa" };
+    if (s.completed || s.state === "post") return { st: "post", hg, ag, txt: "finita" };
+    if (s.state === "in") return { st: "in", hg, ag, txt: /half/i.test(s.name || "") || s.detail === "HT" ? "intervallo" : (m.e.status.displayClock || s.detail || "in corso") };
+    return { st: "pre", txt: "da giocare" };
+  }
+  function hit(k, h, a) {
+    const t = h + a, m = /^(Over|Under) (\d+)[,.](\d)$/.exec(k);
+    if (m) { const line = +m[2] + +m[3] / 10; return m[1] === "Over" ? t > line : t < line; }
+    return { "1": h > a, "X": h === a, "2": h < a, "1X": h >= a, "X2": h <= a, "12": h !== a, "Goal": h > 0 && a > 0, "No Goal": h === 0 || a === 0 }[k];
+  }
+  // giocata: [codice, casa, trasferta, consiglio, quota, ora, data]
+  async function evalLegs(legs) {
+    return Promise.all(legs.map(async L => {
+      const [id, h, a, k, odd, t, d] = L, r = await result(id, h, a, d);
+      const ok = (r.st === "post" || r.st === "in") ? hit(k, r.hg, r.ag) : null;
+      return { id, h, a, k, odd: +odd, t, d, r, ok };
+    }));
+  }
+  function status(rows) {
+    if (rows.some(x => x.r.st === "post" && !x.ok)) return "lose";
+    if (rows.every(x => x.r.st === "post" && x.ok)) return "win";
+    return rows.some(x => x.r.st === "in" || x.r.st === "post") ? "run" : "pre";
+  }
+  function legHtml(x) {
+    const sc = (x.r.st === "post" || x.r.st === "in") ? `${x.r.hg}-${x.r.ag}` : "";
+    const mark = x.ok == null ? "" : x.ok ? ' <span class="ok">✓</span>' : ' <span class="ko">✗</span>';
+    const st = x.r.st === "in" ? `<span class="live"><span class="dot"></span>${esc(x.r.txt)}</span>${x.ok != null ? " · per ora" + mark : ""}`
+      : x.r.st === "post" ? `finita${mark}` : x.r.st === "pre" ? `da giocare${x.t ? " alle " + esc(x.t) : ""}` : esc(x.r.txt);
+    return `<div class="leg"><div class="teams">${esc(x.h)} – ${esc(x.a)}</div><div class="score">${sc}</div>
+      <div class="sub">${st}</div><div class="tip">${esc(x.k)} · ${q2(x.odd)}</div></div>`;
+  }
+  function ticketHtml(title, rows, stake, cls) {
+    const q = rows.reduce((s, x) => s * x.odd, 1), st = status(rows);
+    const done = rows.filter(x => x.r.st === "post" && x.ok).length;
+    const esito = st === "lose" ? `<span class="ko">✗ Persa</span>` : st === "win" ? `<span class="ok">✓ Vinta: incassi ${euro(stake * q)}</span>`
+      : st === "run" ? `In corso · ${done} su ${rows.length} già vinte${rows.some(x => x.r.st === "in" && !x.ok) ? ' · <span class="ko">per ora una sbagliata</span>' : ""}` : "Da giocare";
+    return `<div class="card ${cls || ""} ${st === "win" ? "win" : st === "lose" ? "lose" : ""}"><div class="ttl">${title}</div>
+      ${rows.map(legHtml).join("")}
+      <div class="money"><div><span>Giocata</span><b>${euro(stake)}</b></div><div><span>Quota</span><b>${q2(q)}</b></div><div><span>${st === "lose" ? "Vincita persa" : "Vincita"}</span><b>${euro(stake * q)}</b></div></div>
+      <div class="esito">${esito}</div></div>`;
+  }
+  const fmtDay = d => new Date(d + "T12:00:00").toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+  let busy = false;
+  async function run() {
+    if (busy) return; busy = true;
+    for (const k in cache) delete cache[k];
+    $("#stamp").textContent = "Aggiorno…";
+    try {
+      if (!data || !data.T || !data.T.length) {
+        $("#main").innerHTML = `<div class="card empty">Nessuna schedina ricevuta. Apri questa pagina dal pulsante «Risultati in diretta» della pagina Pronostici, dopo che le schedine di oggi sono pronte.</div>`;
+      } else {
+        const tickets = await Promise.all(data.T.map(evalLegs));
+        let html = `<div class="sub">Schedine di ${esc(fmtDay(data.d))}</div>`;
+        html += tickets.map((rows, i) => ticketHtml(`Schedina ${i + 1}`, rows, data.s)).join("");
+        const allLost = tickets.every(rows => status(rows) === "lose");
+        if (allLost && data.R && data.R.l?.length) {
+          const rows = await evalLegs(data.R.l);
+          html += `<div class="card rec" style="padding:10px 14px"><b>Tutte le schedine sono perse (${euro(data.R.lost)}).</b> <span class="sub">Ecco la schedina di recupero con le partite più sicure non ancora iniziate.</span></div>` + ticketHtml("Schedina di recupero", rows, data.R.s, "rec");
+        } else if (allLost) {
+          html += `<div class="card rec">Tutte le schedine sono perse. Per il recupero apri la pagina Pronostici: la schedina si prepara lì.</div>`;
+        }
+        $("#main").innerHTML = html;
+      }
+      $("#stamp").textContent = "Letto alle " + new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+    } finally { busy = false; }
+  }
+  $("#go").addEventListener("click", run);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) run(); });
+  setInterval(() => { if (!document.hidden) run(); }, 60000);
+  run();
+})();
+</script>
+</body>
+</html>
