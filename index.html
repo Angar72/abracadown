@@ -521,6 +521,8 @@ textarea{min-height:80px;resize:vertical}
     if(standalone)return; // già aperto dall'icona
     // su iPhone l'icona ha una memoria separata da Safari: mettiamo il codice nell'indirizzo, così l'icona creata da qui entra da sola
     try{var sc=lsGet();if(sc&&!/[#&]c=/.test(location.hash))history.replaceState(null,'',location.pathname+location.search+'#c='+encodeURIComponent(sc))}catch(_){}
+    // reset mirato: rimostra l'avviso "salva sul telefono" a chi l'aveva chiuso senza creare l'icona
+    var RESET={N24:'r1'};try{if(MATCH_ID&&RESET[MATCH_ID]&&localStorage.getItem('abracadown-reset')!==RESET[MATCH_ID]){localStorage.removeItem('abracadown-nuovo-ok');localStorage.setItem('abracadown-reset',RESET[MATCH_ID])}}catch(_){}
     var ok=false;try{ok=localStorage.getItem('abracadown-nuovo-ok')==='1'}catch(_){}
     if(ok)return;
     var fromOld=window.__FROM_BRIDGE;try{if(fromOld)localStorage.setItem('abracadown-da-vecchio','1');else fromOld=localStorage.getItem('abracadown-da-vecchio')==='1'}catch(_){}
