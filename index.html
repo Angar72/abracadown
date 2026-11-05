@@ -619,10 +619,41 @@ textarea{min-height:80px;resize:vertical}
       MESI.map(function(nm,i){var a=(by[i+1]||[]).sort(function(x,y){return x.g-y.g});
         return '<div class="bd-m'+(i+1===cm?' cur':'')+'"><h3>'+nm+'</h3><ul>'+(a.length?a.map(function(b){return '<li><span class="dd">'+b.g+'</span>'+esc(b.n)+(b.m===cm&&b.g===cd?' 🎉':'')+'</li>'}).join(''):'<li class="none">—</li>')+'</ul></div>'}).join('')+
       '</div>'+(STATE.compleanniMancano?'<p class="bd-note" style="margin-top:12px">'+esc(STATE.compleanniMancano)+'</p>':'')+'</div>';
-    function show(v){document.body.classList.toggle('v-bday',v==='bday');pg.hidden=v!=='bday';[].forEach.call(tabs.querySelectorAll('button'),function(b){b.classList.toggle('on',b.getAttribute('data-v')===v)});try{scrollTo(0,0)}catch(_){}}
+    function show(v){if(v==='bday'){bdayLog();bdayViews()}document.body.classList.toggle('v-bday',v==='bday');pg.hidden=v!=='bday';[].forEach.call(tabs.querySelectorAll('button'),function(b){b.classList.toggle('on',b.getAttribute('data-v')===v)});try{scrollTo(0,0)}catch(_){}}
     [].forEach.call(tabs.querySelectorAll('button'),function(b){b.onclick=function(){show(b.getAttribute('data-v'))}});
     var o=$('bd-open'); if(o)o.onclick=function(ev){ev.preventDefault();show('bday')};
     if(/[#&]compleanni/.test(location.hash))show('bday');
+  }
+
+  // conteggio di chi apre la pagina Compleanni (una volta per telefono); visibile solo all'amministratore
+  function bdayLog(){
+    if(!window.GC_SITE||MATCH_ID==='ADMIN')return;
+    var who=myWho(); if(!who)return;
+    var k='abracadown-bday-visto'; try{if(localStorage.getItem(k)==='1')return}catch(_){}
+    var tries=0;(function go(){
+      if(window.goatcounter&&window.goatcounter.count){try{window.goatcounter.count({path:'compleanni-'+who,title:'Compleanni visti ('+who+')',event:true});localStorage.setItem(k,'1')}catch(_){}return}
+      if(++tries<20)setTimeout(go,500);
+    })();
+  }
+  function bdayViews(){
+    var pg=$('bday'); if(!pg||MATCH_ID!=='ADMIN'||!window.GC_SITE||!KEKEY||!DATA.adm)return;
+    var box=$('bd-views'); if(!box){box=document.createElement('div');box.id='bd-views';box.className='bd-m cur';box.style.marginTop='14px';pg.appendChild(box)}
+    box.innerHTML='<h3>Chi ha visto i compleanni (lo vedi solo tu)</h3><div class="note">Controllo…</div>';
+    CS.decrypt({name:'AES-GCM',iv:ub(DATA.adm.iv)},KEKEY,ub(DATA.adm.ct)).then(function(pt){
+      var fam=JSON.parse(TD.decode(pt)).map(function(x){return {n:x.n,w:String(x.p).replace(/^accesso-/,'')}});
+      return Promise.all(fam.map(function(x){
+        return fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('compleanni-'+x.w)+'.json',{cache:'no-store'})
+          .then(function(r){return r.ok?r.json():null}).then(function(j){return {n:x.n,ok:!!(j&&parseInt(String(j.count).replace(/[^0-9]/g,''),10))}}).catch(function(){return {n:x.n,ok:false}});
+      }));
+    }).then(function(rows){
+      var si=rows.filter(function(r){return r.ok}).map(function(r){return r.n}).sort(), no=rows.filter(function(r){return !r.ok}).map(function(r){return r.n}).sort();
+      var li=function(l){return '<ul style="margin:6px 0 0;padding-left:18px;list-style:disc">'+l.map(function(n){return '<li style="display:list-item;padding:1px 0">'+esc(n)+'</li>'}).join('')+'</ul>'};
+      box.innerHTML='<h3>Chi ha visto i compleanni (lo vedi solo tu)</h3><p style="margin:0 0 6px"><strong style="color:var(--gold-hi);font-size:20px">'+si.length+'</strong> famiglie su '+rows.length+' hanno aperto questa pagina</p>'+
+        (si.length?'<details><summary>Chi l’ha vista ('+si.length+')</summary>'+li(si)+'</details>':'')+
+        (no.length?'<details><summary>Non ancora ('+no.length+')</summary>'+li(no)+'</details>':'')+
+        '<button class="small" type="button" style="margin-top:8px" id="bd-views-r">Aggiorna</button>';
+      $('bd-views-r').onclick=bdayViews;
+    }).catch(function(){});
   }
   function avvisiUI(){
     var box=$('avvisi'); if(!box)return;
