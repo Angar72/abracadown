@@ -814,7 +814,7 @@ textarea{min-height:80px;resize:vertical}
     if(!silent){st.className='status';st.textContent='Verifica in corso…';btn.disabled=true}
     return unlock(code).then(function(p){STATE=p;lsSet(code);showContent();logAccess(code);adminPanel()}).catch(function(err){
       btn.disabled=false;
-      if(silent){lsSet(null);st.textContent='';return}
+      if(silent){if(err&&err.name==='OperationError')lsSet(null);st.textContent='';return} // cancella il codice salvato solo se è davvero sbagliato
       st.className='status err';
       st.textContent=err&&err.message==='nocrypto'?'Questo browser è troppo vecchio per aprire il calendario. Aggiorna il telefono o prova con un altro browser.':
         'Codice non valido. Controlla di averlo scritto come nel messaggio ricevuto.';
