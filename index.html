@@ -900,5 +900,14 @@ textarea{min-height:80px;resize:vertical}
     });
   }
 })();
+// Quando si torna sul calendario lasciato aperto (telefono/app), ricarica la pagina:
+// così si vede sempre la versione aggiornata e l'ingresso viene contato.
+(function(){var hid=0;
+  document.addEventListener('visibilitychange',function(){
+    if(document.visibilityState==='hidden'){hid=Date.now();return}
+    if(hid&&Date.now()-hid>60000){location.reload()}
+  });
+  window.addEventListener('pageshow',function(e){if(e.persisted)location.reload()});
+})();
 </script>
 </body></html>
