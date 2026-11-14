@@ -856,7 +856,7 @@ textarea{min-height:80px;resize:vertical}
           var w=rs.filter(function(r){return r.v||r.a});
           var d=document.createElement('div'); d.style.marginTop='14px';
           d.innerHTML='<h3 style="margin:0 0 6px">🎬 Chi ha guardato il video di Giulia</h3>'+(w.length?'<ul class="acc-list">'+w.map(function(r){return '<li><span>'+esc(r.n)+'</span><span class="acc-yes">'+(r.v?'visto':'')+(r.v&&r.a?' · ':'')+(r.a?'🔊 con audio':'')+'</span></li>'}).join('')+'</ul>':'<p style="margin:0">Nessuno ancora.</p>');
-          $('adm-list').appendChild(d);
+          var old=$('adm-spot');if(old)old.remove();d.id='adm-spot';$('adm-list').parentNode.insertBefore(d,$('adm-list').nextSibling);
         });
       }
     }).catch(function(){box.hidden=true});
