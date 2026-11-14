@@ -850,6 +850,15 @@ textarea{min-height:80px;resize:vertical}
             }).join('')+'</ul>'
           :'<p style="margin:0">Nessuna famiglia è ancora entrata. Appena qualcuno entra con il proprio codice, comparirà qui.</p>';
       });
+      var sp=STATE.spot; if(sp){var sid=(sp.id||sp.from||'spot').replace(/[^a-z0-9-]/gi,'');
+        var q=function(kind,x){return fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent(kind+'-'+sid+'-'+x.p.replace(/^accesso-/,''))+'.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){return j?f(j.count):0}).catch(function(){return 0})};
+        Promise.all(fam.map(function(x){return Promise.all([q('spotvisto',x),q('spotaudio',x)]).then(function(a){return {n:x.n,v:a[0],a:a[1]}})})).then(function(rs){
+          var w=rs.filter(function(r){return r.v||r.a});
+          var d=document.createElement('div'); d.style.marginTop='14px';
+          d.innerHTML='<h3 style="margin:0 0 6px">🎬 Chi ha guardato il video di Giulia</h3>'+(w.length?'<ul class="acc-list">'+w.map(function(r){return '<li><span>'+esc(r.n)+'</span><span class="acc-yes">'+(r.v?'visto':'')+(r.v&&r.a?' · ':'')+(r.a?'🔊 con audio':'')+'</span></li>'}).join('')+'</ul>':'<p style="margin:0">Nessuno ancora.</p>');
+          $('adm-list').appendChild(d);
+        });
+      }
     }).catch(function(){box.hidden=true});
   }
   // solo sul sito indipendente: registra su GoatCounter quale famiglia è entrata (mai il codice amministratore)
