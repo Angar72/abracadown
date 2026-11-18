@@ -908,6 +908,8 @@ textarea{min-height:80px;resize:vertical}
     if(hid&&Date.now()-hid>60000){location.reload()}
   });
   window.addEventListener('pageshow',function(e){if(e.persisted)location.reload()});
+  // a mezzanotte la pagina rimasta aperta si ricarica: gli appuntamenti del giorno prima spariscono
+  (function midnight(){var n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1,0,0,30);setTimeout(function(){location.reload()},m-n)})();
 })();
 </script>
 </body></html>
