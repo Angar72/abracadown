@@ -1,0 +1,24 @@
+name: Messaggio giornaliero ad Alice
+
+on:
+  schedule:
+    # ogni giorno alle 15:07 UTC = 16:07 ora italiana (17:07 con l'ora legale)
+    - cron: "7 15 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  invia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Invia il messaggio WhatsApp
+        env:
+          ALICE_PHONE: ${{ secrets.ALICE_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
+        run: python gioco-alice/messaggio_whatsapp.py
