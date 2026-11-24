@@ -824,7 +824,7 @@ textarea{min-height:80px;resize:vertical}
     if(!document.querySelector('.xmas-scene')){
       var sc=document.createElement('div');sc.className='xmas-scene';sc.setAttribute('aria-hidden','true');
       sc.innerHTML='<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795529259424_4f60d4eb.mp4" autoplay muted loop playsinline preload="auto"></video>'+
-        '<img class="xs-snowman" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527775519_e0a6a088_1795527775923_64754174.png" alt="" decoding="async">'+'<img class="xs-sleigh" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527776357_489acf13_1795527776699_f74882db.png" alt="" decoding="async">';
+        '<img class="xs-sleigh" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527776357_489acf13_1795527776699_f74882db.png" alt="" decoding="async">';
       document.body.appendChild(sc);
       var vv=sc.querySelector('.xs-vvid');if(vv){vv.addEventListener('playing',function(){sc.classList.add('vid')});var pp=vv.play&&vv.play();if(pp&&pp.catch)pp.catch(function(){})}
     }
