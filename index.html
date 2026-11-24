@@ -796,7 +796,7 @@ textarea{min-height:80px;resize:vertical}
       '.xs-win{animation:xwin 3s ease-in-out infinite}@keyframes xwin{50%{fill:#ffb84d}}'+
       /* scritte addobbate */
       'body.xmas .brand h1{position:relative;background:linear-gradient(90deg,#FFE08A,#fff,#F6B92B,#ff5a5a,#FFE08A);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:xshine 6s linear infinite}'+
-      'body.xmas .brand h1::before{content:"";position:absolute;left:-.32em;top:-.55em;width:1.05em;height:.9em;background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 60 50%27%3E%3Cpath d=%27M6 40 Q20 4 44 8 Q56 12 54 30 L48 28 Q46 18 38 18 Q24 20 20 42Z%27 fill=%27%23D7192A%27/%3E%3Crect x=%272%27 y=%2736%27 width=%2734%27 height=%2710%27 rx=%275%27 fill=%27%23fff%27/%3E%3Ccircle cx=%2751%27 cy=%2732%27 r=%276%27 fill=%27%23fff%27/%3E%3C/svg%3E") no-repeat center/contain;transform:rotate(-18deg)}'+
+      'body.xmas .brand h1.xhat::before{content:"";position:absolute;left:-.32em;top:-.55em;width:1.05em;height:.9em;background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 60 50%27%3E%3Cpath d=%27M6 40 Q20 4 44 8 Q56 12 54 30 L48 28 Q46 18 38 18 Q24 20 20 42Z%27 fill=%27%23D7192A%27/%3E%3Crect x=%272%27 y=%2736%27 width=%2734%27 height=%2710%27 rx=%275%27 fill=%27%23fff%27/%3E%3Ccircle cx=%2751%27 cy=%2732%27 r=%276%27 fill=%27%23fff%27/%3E%3C/svg%3E") no-repeat center/contain;transform:rotate(-18deg)}'+
       '@keyframes xshine{to{background-position:300% 0}}'+
       'body.xmas #shell h2,body.xmas #shell h3{text-shadow:0 0 12px rgba(255,224,138,.35)}'+
       'body.xmas #shell .month h3::before{content:"🎄 "}body.xmas #shell .month h3::after{content:" ✨"}'+
@@ -817,7 +817,7 @@ textarea{min-height:80px;resize:vertical}
     hl.innerHTML='<path d="M0 60 Q60 30 130 55 T260 50 T400 45 V90 H0Z" fill="#dfe9f5"/><path d="M0 75 Q90 50 200 72 T400 66 V90 H0Z" fill="#fff"/>';
     document.body.appendChild(hl);
     // scene animate di Natale (disegni originali): slitta con le renne che vola, pupazzo di neve che saluta, casetta con il camino che fuma
-    if(!document.querySelector('.xmas-scene')){
+    if(window.XMAS_SCENE&&!document.querySelector('.xmas-scene')){
       var sc=document.createElement('div');sc.className='xmas-scene';sc.setAttribute('aria-hidden','true');
       var deer=function(x){return '<g transform="translate('+x+',0)"><g class="xr-leg"><path d="M8 30 l-3 12 M14 30 l2 12 M26 30 l-2 12 M32 30 l3 12" stroke="#7a4a22" stroke-width="2.5" stroke-linecap="round"/></g>'+
         '<ellipse cx="20" cy="26" rx="15" ry="8" fill="#9a5d2c"/><path d="M33 22 q6 -8 10 -6 q2 4 -4 8z" fill="#9a5d2c"/><circle cx="43" cy="16" r="2.4" fill="#ff3b3b" class="xr-nose"/>'+
