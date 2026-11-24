@@ -770,13 +770,36 @@ textarea{min-height:80px;resize:vertical}
       '.xmas-orn{animation:xblink 1.8s ease-in-out infinite}'+
       '.xmas-prev{position:absolute;top:8px;right:10px;font-size:.7rem;background:rgba(0,0,0,.35);color:#fff;padding:2px 8px;border-radius:99px}'+
       'body.xmas .brand h1::after{content:" 🎄"}'+
-      '@media (prefers-reduced-motion:reduce){.xmas-snow{display:none}.xmas-lights b,.xmas-star,.xmas-orn{animation:none}}';
+      /* fondo animato: cielo di Natale che cambia colore, stelline che brillano, colline innevate */
+      'body.xmas{background:linear-gradient(160deg,#071a33,#0d3b2a 35%,#4a0d14 70%,#071a33);background-size:300% 300%;animation:xbg 24s ease-in-out infinite}'+
+      '@keyframes xbg{0%,100%{background-position:0% 30%}50%{background-position:100% 70%}}'+
+      '.xmas-sky{position:fixed;inset:0;pointer-events:none;z-index:0}'+
+      '.xmas-sky s{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;text-decoration:none;box-shadow:0 0 6px 1px rgba(255,240,200,.9);animation:xtw 3s ease-in-out infinite}'+
+      '@keyframes xtw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.3)}}'+
+      '.xmas-hills{position:fixed;left:0;right:0;bottom:0;height:90px;pointer-events:none;z-index:1;opacity:.9}'+
+      'body.xmas #shell{position:relative;z-index:2}'+
+      /* scritte addobbate */
+      'body.xmas .brand h1{position:relative;background:linear-gradient(90deg,#FFE08A,#fff,#F6B92B,#ff5a5a,#FFE08A);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:xshine 6s linear infinite}'+
+      'body.xmas .brand h1::before{content:"";position:absolute;left:-.32em;top:-.55em;width:1.05em;height:.9em;background:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 60 50%27%3E%3Cpath d=%27M6 40 Q20 4 44 8 Q56 12 54 30 L48 28 Q46 18 38 18 Q24 20 20 42Z%27 fill=%27%23D7192A%27/%3E%3Crect x=%272%27 y=%2736%27 width=%2734%27 height=%2710%27 rx=%275%27 fill=%27%23fff%27/%3E%3Ccircle cx=%2751%27 cy=%2732%27 r=%276%27 fill=%27%23fff%27/%3E%3C/svg%3E") no-repeat center/contain;transform:rotate(-18deg)}'+
+      '@keyframes xshine{to{background-position:300% 0}}'+
+      'body.xmas #shell h2,body.xmas #shell h3{text-shadow:0 0 12px rgba(255,224,138,.35)}'+
+      'body.xmas #shell .month h3::before{content:"🎄 "}body.xmas #shell .month h3::after{content:" ✨"}'+
+      'body.xmas .eyebrow::before{content:"❄ "}body.xmas .eyebrow::after{content:" ❄"}'+
+      'body.xmas .tagline::after{content:" · Buone Feste 🎁"}'+
+      'body.xmas .marquee,body.xmas .card,body.xmas .ev{box-shadow:0 0 0 2px rgba(246,185,43,.35),0 0 18px rgba(215,25,42,.25)}'+
+      '@media (prefers-reduced-motion:reduce){.xmas-snow{display:none}body.xmas,body.xmas .brand h1,.xmas-sky s,.xmas-lights b,.xmas-star,.xmas-orn{animation:none}}';
       document.head.appendChild(st)}
     // neve
     var sn=document.createElement('div');sn.className='xmas-snow';sn.setAttribute('aria-hidden','true');var hs='';
     for(var i=0;i<38;i++){var sz=(8+Math.random()*14).toFixed(0),du=(7+Math.random()*9).toFixed(1),de=(-Math.random()*16).toFixed(1);
       hs+='<i style="left:'+(Math.random()*100).toFixed(1)+'vw;font-size:'+sz+'px;animation-duration:'+du+'s,'+(2+Math.random()*3).toFixed(1)+'s;animation-delay:'+de+'s,'+de+'s">'+(i%3?'❄':'•')+'</i>'}
     sn.innerHTML=hs;document.body.appendChild(sn);
+    var sky=document.createElement('div');sky.className='xmas-sky';sky.setAttribute('aria-hidden','true');var ss='';
+    for(var k=0;k<45;k++)ss+='<s style="left:'+(Math.random()*100).toFixed(1)+'%;top:'+(Math.random()*75).toFixed(1)+'%;animation-delay:'+(-Math.random()*3).toFixed(1)+'s;animation-duration:'+(2+Math.random()*3).toFixed(1)+'s"></s>';
+    sky.innerHTML=ss;document.body.insertBefore(sky,document.body.firstChild);
+    var hl=document.createElementNS('http://www.w3.org/2000/svg','svg');hl.setAttribute('class','xmas-hills');hl.setAttribute('viewBox','0 0 400 90');hl.setAttribute('preserveAspectRatio','none');hl.setAttribute('aria-hidden','true');
+    hl.innerHTML='<path d="M0 60 Q60 30 130 55 T260 50 T400 45 V90 H0Z" fill="#dfe9f5"/><path d="M0 75 Q90 50 200 72 T400 66 V90 H0Z" fill="#fff"/>';
+    document.body.appendChild(hl);
     // lucine sotto la testata
     var br=document.querySelector('.brand');
     if(br&&!document.querySelector('.xmas-lights')){var li=document.createElement('div');li.className='xmas-lights';li.setAttribute('aria-hidden','true');
