@@ -769,7 +769,10 @@ textarea{min-height:80px;resize:vertical}
       '.xmas-star{transform-origin:43px 14px;animation:xstar 2.4s ease-in-out infinite}@keyframes xstar{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.18) rotate(12deg)}}'+
       '.xmas-orn{animation:xblink 1.8s ease-in-out infinite}'+
       '.xmas-prev{position:absolute;top:8px;right:10px;font-size:.7rem;background:rgba(0,0,0,.35);color:#fff;padding:2px 8px;border-radius:99px}'+
-      'body.xmas .brand h1::after{content:" 🎄"}'+
+      '.xmas-mini{display:inline-block;width:.9em;height:1.1em;vertical-align:-.12em;margin-left:.15em}'+
+      '.xmas-mini .l,.xmas-card .xmas-orn{filter:drop-shadow(0 0 3px currentColor) drop-shadow(0 0 6px currentColor)}'+
+      '.xmas-mini .l{animation:xblink 1.4s ease-in-out infinite}'+
+      '.xmas-tree-glow{filter:drop-shadow(0 0 6px rgba(80,255,140,.55))}'+
       /* fondo animato: cielo di Natale che cambia colore, stelline che brillano, colline innevate */
       'body.xmas{background:linear-gradient(160deg,#071a33,#0d3b2a 35%,#4a0d14 70%,#071a33);background-size:300% 300%;animation:xbg 24s ease-in-out infinite}'+
       '@keyframes xbg{0%,100%{background-position:0% 30%}50%{background-position:100% 70%}}'+
@@ -805,15 +808,17 @@ textarea{min-height:80px;resize:vertical}
     if(br&&!document.querySelector('.xmas-lights')){var li=document.createElement('div');li.className='xmas-lights';li.setAttribute('aria-hidden','true');
       var cols=['#ff3b3b','#ffd23f','#3bd16f','#4da3ff','#ff8c42'],lh='';for(var j=0;j<22;j++)lh+='<b style="--c:'+cols[j%5]+';--d:'+((j%4)*.4).toFixed(1)+'s"></b>';
       li.innerHTML=lh;br.parentNode.insertBefore(li,br.nextSibling)}
+    var h1=document.querySelector('.brand h1');
+    if(h1&&!h1.querySelector('.xmas-mini'))h1.insertAdjacentHTML('beforeend','<svg class="xmas-mini" viewBox="0 0 40 50" aria-hidden="true"><polygon points="20,6 6,26 34,26" fill="#1f9a52"/><polygon points="20,16 3,40 37,40" fill="#178a47"/><rect x="17" y="40" width="6" height="7" fill="#6b3f1d"/><polygon points="20,0 22,5 27,5 23,8 24.5,13 20,10 15.5,13 17,8 13,5 18,5" fill="#FFE08A" class="l" style="color:#FFE08A"/><circle class="l" cx="15" cy="22" r="2.2" fill="#ff3b3b" style="color:#ff3b3b;animation-delay:.2s"/><circle class="l" cx="25" cy="24" r="2.2" fill="#4da3ff" style="color:#4da3ff;animation-delay:.7s"/><circle class="l" cx="12" cy="35" r="2.2" fill="#ffd23f" style="color:#ffd23f;animation-delay:1s"/><circle class="l" cx="22" cy="33" r="2.2" fill="#ff8c42" style="color:#ff8c42;animation-delay:.4s"/><circle class="l" cx="30" cy="36" r="2.2" fill="#e45bff" style="color:#e45bff;animation-delay:1.2s"/></svg>');
     // albero con conto alla rovescia
     var xm=new Date(t.getFullYear()+(t.getMonth()===0?-1:0),11,25),n=Math.round((xm-t)/86400000),head,big,sub;
     if(n>1){head='Mancano';big=n+' giorni';sub='a Natale! 🎁'}else if(n===1){head='Domani è';big='Vigilia';sub='…anzi, domani è Natale! 🎅'}else if(n===0){head='Oggi è';big='Natale!';sub='Buon Natale da tutti gli Abracadown 🎄'}else{head='Buone';big='Feste!';sub='Felice anno nuovo dagli Abracadown ✨'}
-    var tree='<svg viewBox="0 0 86 110" aria-hidden="true">'+
+    var tree='<svg class="xmas-tree-glow" viewBox="0 0 86 110" aria-hidden="true">'+
       '<rect x="37" y="92" width="12" height="14" rx="2" fill="#6b3f1d"/>'+
       '<polygon points="43,18 14,58 72,58" fill="#1f8a4c"/><polygon points="43,34 8,78 78,78" fill="#1a7a43"/><polygon points="43,52 4,96 82,96" fill="#156b3a"/>'+
       '<path d="M22 66 Q43 74 64 64 M16 86 Q43 96 72 84" stroke="#FFE08A" stroke-width="2" fill="none" opacity=".8"/>'+
-      '<circle class="xmas-orn" cx="30" cy="62" r="4" fill="#ff3b3b"/><circle class="xmas-orn" style="animation-delay:.6s" cx="56" cy="70" r="4" fill="#4da3ff"/>'+
-      '<circle class="xmas-orn" style="animation-delay:1.1s" cx="40" cy="82" r="4" fill="#ffd23f"/><circle class="xmas-orn" style="animation-delay:.3s" cx="62" cy="90" r="4" fill="#ff8c42"/><circle class="xmas-orn" style="animation-delay:.9s" cx="22" cy="90" r="4" fill="#e45bff"/>'+
+      '<circle class="xmas-orn" style="color:#ff3b3b" cx="30" cy="62" r="4" fill="#ff3b3b"/><circle class="xmas-orn" style="color:#3bd16f;animation-delay:1.4s" cx="48" cy="46" r="3.5" fill="#3bd16f"/><circle class="xmas-orn" style="color:#ffd23f;animation-delay:.2s" cx="36" cy="40" r="3" fill="#ffd23f"/><circle class="xmas-orn" style="color:#4da3ff;animation-delay:.6s" cx="56" cy="70" r="4" fill="#4da3ff"/>'+
+      '<circle class="xmas-orn" style="color:#ffd23f;animation-delay:1.1s" cx="40" cy="82" r="4" fill="#ffd23f"/><circle class="xmas-orn" style="color:#ff8c42;animation-delay:.3s" cx="62" cy="90" r="4" fill="#ff8c42"/><circle class="xmas-orn" style="color:#e45bff;animation-delay:.9s" cx="22" cy="90" r="4" fill="#e45bff"/>'+
       '<polygon class="xmas-star" points="43,4 46.5,11 54,11.8 48.4,16.8 50,24 43,20.2 36,24 37.6,16.8 32,11.8 39.5,11" fill="#FFE08A"/></svg>';
     var card=document.createElement('section');card.id='xmas-card';card.className='xmas-card';card.setAttribute('aria-label','Conto alla rovescia per Natale');
     card.innerHTML=tree+'<div><h2>'+head+'</h2><div class="xd">'+big+'</div><p class="xs">'+sub+'</p></div>'+
