@@ -744,7 +744,7 @@ textarea{min-height:80px;resize:vertical}
 
   // NATALE: addobbi animati (neve, lucine, albero con conto alla rovescia).
   // Fino al 5 dicembre li vedono solo l'amministratore, Alice e Tonia; dal 6 dicembre tutti, fino all'Epifania.
-  var XMAS={from:'2026-11-24',publicFrom:'2026-12-06',until:'2027-01-06',preview:['alice','tonia','francesco','oasipark','danilo']};
+  var XMAS={from:'2026-11-24',publicFrom:'2026-12-06',until:'2027-01-06',preview:['alice','tonia','francesco','oasipark','danilo','vincenzo','paolo','ottorino']};
   function nataleUI(){
     var t=todayD(); if(t<parse(XMAS.from)||t>parse(XMAS.until))return;
     var who=myWho(); if(t<parse(XMAS.publicFrom)&&MATCH_ID!=='ADMIN'&&XMAS.preview.indexOf(who)<0)return;
