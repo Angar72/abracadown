@@ -599,7 +599,7 @@ textarea{min-height:80px;resize:vertical}
     $('moved-ok').onclick=function(){try{localStorage.setItem('abracadown-nuovo-ok','1')}catch(_){}d.remove()};
   }
   function showContent(){
-    $('shell').classList.remove('locked');$('gate').hidden=true;render();movedBanner();avvisiUI();bdayUI();spotUI();festaUI();
+    $('shell').classList.remove('locked');$('gate').hidden=true;render();movedBanner();avvisiUI();bdayUI();spotUI();festaUI();nataleUI();
     var v=$('giulia-video');if(v){var p=v.play&&v.play();if(p&&p.catch)p.catch(function(){})}
   }
   var MATCH_ID=null, KEKEY=null;
@@ -742,6 +742,95 @@ textarea{min-height:80px;resize:vertical}
     }).catch(function(){})}
   }
 
+  // NATALE: addobbi animati (neve, lucine, albero con conto alla rovescia).
+  // Fino al 5 dicembre li vedono solo l'amministratore, Alice e Tonia; dal 6 dicembre tutti, fino all'Epifania.
+  var XMAS={from:'2026-11-24',publicFrom:'2026-12-06',until:'2027-01-06',preview:['alice','tonia']};
+  function nataleUI(){
+    var t=todayD(); if(t<parse(XMAS.from)||t>parse(XMAS.until))return;
+    var who=myWho(); if(t<parse(XMAS.publicFrom)&&MATCH_ID!=='ADMIN'&&XMAS.preview.indexOf(who)<0)return;
+    if($('xmas-card'))return;
+    document.body.classList.add('xmas');
+    if(!$('xmas-css')){var st=document.createElement('style');st.id='xmas-css';st.textContent=
+      '.xmas-snow{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}'+
+      '.xmas-snow i{position:absolute;top:-6vh;color:#fff;opacity:.85;font-style:normal;text-shadow:0 0 6px rgba(255,255,255,.6);animation:xfall linear infinite,xsway ease-in-out infinite alternate}'+
+      '@keyframes xfall{to{transform:translateY(112vh)}}@keyframes xsway{from{margin-left:-14px}to{margin-left:14px}}'+
+      '.xmas-lights{display:flex;justify-content:space-between;gap:4px;margin:-8px 0 -6px;padding:0 4px;position:relative;height:26px}'+
+      '.xmas-lights::before{content:"";position:absolute;left:0;right:0;top:4px;height:10px;border-bottom:2px solid #2f5d34;border-radius:0 0 50% 50%/0 0 100% 100%}'+
+      '.xmas-lights b{position:relative;top:8px;width:9px;height:14px;border-radius:50% 50% 45% 45%;background:var(--c);box-shadow:0 0 10px 2px var(--c);animation:xblink 1.6s ease-in-out infinite;animation-delay:var(--d)}'+
+      '.xmas-lights b::before{content:"";position:absolute;top:-4px;left:2px;width:5px;height:5px;background:#3b4a3c;border-radius:1px}'+
+      '@keyframes xblink{0%,100%{opacity:1;filter:brightness(1.15)}50%{opacity:.35;box-shadow:none}}'+
+      '.xmas-card{position:relative;overflow:hidden;display:flex;align-items:center;gap:16px;padding:34px 18px 16px;border-radius:18px;'+
+        'background:linear-gradient(135deg,#0f3d22,#145a32 55%,#8E0F19);border:2px solid var(--gold);box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 0 40px rgba(255,224,138,.12)}'+
+      '.xmas-card svg{flex:0 0 auto;width:86px;height:110px}'+
+      '.xmas-card h2{font-family:var(--display);font-size:1.25rem;letter-spacing:.02em;color:var(--gold-hi)}'+
+      '.xmas-card .xd{font-family:var(--display);font-size:2.6rem;line-height:1;color:#fff;text-shadow:0 0 18px rgba(255,224,138,.6)}'+
+      '.xmas-card p{margin:4px 0 0;color:#f3e7c9}'+
+      '.xmas-card .xs{font-family:var(--script);font-size:1.35rem;color:var(--gold-hi)}'+
+      '.xmas-star{transform-origin:43px 14px;animation:xstar 2.4s ease-in-out infinite}@keyframes xstar{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.18) rotate(12deg)}}'+
+      '.xmas-orn{animation:xblink 1.8s ease-in-out infinite}'+
+      '.xmas-prev{position:absolute;top:8px;right:10px;font-size:.7rem;background:rgba(0,0,0,.35);color:#fff;padding:2px 8px;border-radius:99px}'+
+      'body.xmas .brand h1::after{content:" 🎄"}'+
+      '@media (prefers-reduced-motion:reduce){.xmas-snow{display:none}.xmas-lights b,.xmas-star,.xmas-orn{animation:none}}';
+      document.head.appendChild(st)}
+    // neve
+    var sn=document.createElement('div');sn.className='xmas-snow';sn.setAttribute('aria-hidden','true');var hs='';
+    for(var i=0;i<38;i++){var sz=(8+Math.random()*14).toFixed(0),du=(7+Math.random()*9).toFixed(1),de=(-Math.random()*16).toFixed(1);
+      hs+='<i style="left:'+(Math.random()*100).toFixed(1)+'vw;font-size:'+sz+'px;animation-duration:'+du+'s,'+(2+Math.random()*3).toFixed(1)+'s;animation-delay:'+de+'s,'+de+'s">'+(i%3?'❄':'•')+'</i>'}
+    sn.innerHTML=hs;document.body.appendChild(sn);
+    // lucine sotto la testata
+    var br=document.querySelector('.brand');
+    if(br&&!document.querySelector('.xmas-lights')){var li=document.createElement('div');li.className='xmas-lights';li.setAttribute('aria-hidden','true');
+      var cols=['#ff3b3b','#ffd23f','#3bd16f','#4da3ff','#ff8c42'],lh='';for(var j=0;j<22;j++)lh+='<b style="--c:'+cols[j%5]+';--d:'+((j%4)*.4).toFixed(1)+'s"></b>';
+      li.innerHTML=lh;br.parentNode.insertBefore(li,br.nextSibling)}
+    // albero con conto alla rovescia
+    var xm=new Date(t.getFullYear()+(t.getMonth()===0?-1:0),11,25),n=Math.round((xm-t)/86400000),head,big,sub;
+    if(n>1){head='Mancano';big=n+' giorni';sub='a Natale! 🎁'}else if(n===1){head='Domani è';big='Vigilia';sub='…anzi, domani è Natale! 🎅'}else if(n===0){head='Oggi è';big='Natale!';sub='Buon Natale da tutti gli Abracadown 🎄'}else{head='Buone';big='Feste!';sub='Felice anno nuovo dagli Abracadown ✨'}
+    var tree='<svg viewBox="0 0 86 110" aria-hidden="true">'+
+      '<rect x="37" y="92" width="12" height="14" rx="2" fill="#6b3f1d"/>'+
+      '<polygon points="43,18 14,58 72,58" fill="#1f8a4c"/><polygon points="43,34 8,78 78,78" fill="#1a7a43"/><polygon points="43,52 4,96 82,96" fill="#156b3a"/>'+
+      '<path d="M22 66 Q43 74 64 64 M16 86 Q43 96 72 84" stroke="#FFE08A" stroke-width="2" fill="none" opacity=".8"/>'+
+      '<circle class="xmas-orn" cx="30" cy="62" r="4" fill="#ff3b3b"/><circle class="xmas-orn" style="animation-delay:.6s" cx="56" cy="70" r="4" fill="#4da3ff"/>'+
+      '<circle class="xmas-orn" style="animation-delay:1.1s" cx="40" cy="82" r="4" fill="#ffd23f"/><circle class="xmas-orn" style="animation-delay:.3s" cx="62" cy="90" r="4" fill="#ff8c42"/><circle class="xmas-orn" style="animation-delay:.9s" cx="22" cy="90" r="4" fill="#e45bff"/>'+
+      '<polygon class="xmas-star" points="43,4 46.5,11 54,11.8 48.4,16.8 50,24 43,20.2 36,24 37.6,16.8 32,11.8 39.5,11" fill="#FFE08A"/></svg>';
+    var card=document.createElement('section');card.id='xmas-card';card.className='xmas-card';card.setAttribute('aria-label','Conto alla rovescia per Natale');
+    card.innerHTML=tree+'<div><h2>'+head+'</h2><div class="xd">'+big+'</div><p class="xs">'+sub+'</p></div>'+
+      (t<parse(XMAS.publicFrom)?'<span class="xmas-prev">Anteprima: la vedete solo voi</span>':'');
+    card.querySelector('div').insertAdjacentHTML('beforeend','<div class="xmas-music"><button type="button" class="xm-play">🎵 Musica di Natale</button><button type="button" class="xm-next" title="Brano successivo" aria-label="Brano successivo">⏭</button><span class="xm-title"></span></div>');
+    var host=$('next');if(host&&host.parentNode)host.parentNode.insertBefore(card,host);else $('shell').appendChild(card);
+    xmasMusic(card);
+  }
+  // Musica: melodie natalizie tradizionali (di pubblico dominio), suonate dal telefono con un suono di campanelli.
+  function xmasMusic(card){
+    var css=document.getElementById('xmas-css');if(css&&css.textContent.indexOf('xmas-music')<0)css.textContent+=
+      '.xmas-music{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}'+
+      '.xmas-music button{font:inherit;font-weight:700;border:0;border-radius:99px;padding:6px 14px;background:var(--gold);color:#3a0a0d;cursor:pointer}'+
+      '.xmas-music .xm-next{padding:6px 10px}.xmas-music .xm-title{font-size:.85rem;color:#f3e7c9}';
+    var N={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+    function m(s){var r=/^([A-G])(#?)(\d)$/.exec(s);return 12*(+r[3]+1)+N[r[1]]+(r[2]?1:0)}
+    function seq(str){return str.trim().split(/\s+/).map(function(t){var p=t.split(':');return [p[0]==='r'?null:m(p[0]),+(p[1]||1)]})}
+    var TR=[
+      {t:'Jingle Bells',bpm:200,n:seq('E5 E5 E5:2 E5 E5 E5:2 E5 G5 C5:1.5 D5:0.5 E5:4 F5 F5 F5:1.5 F5:0.5 F5 E5 E5 E5:0.5 E5:0.5 E5 D5 D5 E5 D5:2 G5:2 E5 E5 E5:2 E5 E5 E5:2 E5 G5 C5:1.5 D5:0.5 E5:4 F5 F5 F5:1.5 F5:0.5 F5 E5 E5 E5:0.5 E5:0.5 G5 G5 F5 D5 C5:4 r:2')},
+      {t:'We Wish You a Merry Christmas',bpm:170,n:seq('D5 G5 G5:0.5 A5:0.5 G5:0.5 F#5:0.5 E5 E5 E5 A5 A5:0.5 B5:0.5 A5:0.5 G5:0.5 F#5 D5 D5 B5 B5:0.5 C6:0.5 B5:0.5 A5:0.5 G5 E5 D5:0.5 D5:0.5 E5 A5 F#5 G5:3 r:2')},
+      {t:'Deck the Halls',bpm:160,n:seq('G5:1.5 F5:0.5 E5 D5 C5 D5 E5 C5 D5:0.5 E5:0.5 F5:0.5 D5:0.5 E5:1.5 D5:0.5 C5 B4 C5:2 G5:1.5 F5:0.5 E5 D5 C5 D5 E5 C5 D5:0.5 E5:0.5 F5:0.5 D5:0.5 E5:1.5 D5:0.5 C5 B4 C5:2 D5:1.5 E5:0.5 F5 D5 E5:1.5 F5:0.5 G5 D5 E5:0.5 F#5:0.5 G5 A5:0.5 B5:0.5 C6 B5 A5 G5:2 G5:1.5 F5:0.5 E5 D5 C5 D5 E5 C5 A5:0.5 A5:0.5 A5:0.5 A5:0.5 G5:1.5 F5:0.5 E5 D5 C5:2 r:2')},
+      {t:'Astro del Ciel (Silent Night)',bpm:110,n:seq('G5:1.5 A5:0.5 G5 E5:3 G5:1.5 A5:0.5 G5 E5:3 D6:2 D6 B5:3 C6:2 C6 G5:3 A5:2 A5 C6:1.5 B5:0.5 A5 G5:1.5 A5:0.5 G5 E5:3 A5:2 A5 C6:1.5 B5:0.5 A5 G5:1.5 A5:0.5 G5 E5:3 D6:2 D6 F6:1.5 D6:0.5 B5 C6:3 E6:3 C6 G5 E5 G5:1.5 F5:0.5 D5 C5:4 r:2')},
+      {t:'O Tannenbaum',bpm:120,n:seq('D5 G5:0.75 G5:0.25 G5:1.5 A5:0.5 B5:0.75 B5:0.25 B5:1.5 B5:0.5 A5 B5 C6 F#5 A5 G5 r D5 G5:0.75 G5:0.25 G5:1.5 A5:0.5 B5:0.75 B5:0.25 B5:1.5 B5:0.5 A5 B5 C6 F#5 A5 G5:2 r:2')}
+    ];
+    var ctx=null,cur=0,playing=false,timer=null,nodes=[];
+    var bp=card.querySelector('.xm-play'),bn=card.querySelector('.xm-next'),lt=card.querySelector('.xm-title');
+    function bell(f,when,dur){var o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o2.type='triangle';o.frequency.value=f;o2.frequency.value=f*2;
+      var g2=ctx.createGain();g2.gain.value=.25;o2.connect(g2);g2.connect(g);o.connect(g);g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.0001,when);g.gain.exponentialRampToValueAtTime(0.22,when+0.015);g.gain.exponentialRampToValueAtTime(0.0001,when+Math.max(0.35,dur*1.4));
+      o.start(when);o2.start(when);o.stop(when+dur*1.5+0.4);o2.stop(when+dur*1.5+0.4);nodes.push(o,o2)}
+    function playTrack(){var tr=TR[cur],b=60/tr.bpm,at=ctx.currentTime+0.08,tot=0;lt.textContent='♪ '+tr.t;
+      tr.n.forEach(function(x){if(x[0]!==null)bell(440*Math.pow(2,(x[0]-69)/12),at+tot,x[1]*b);tot+=x[1]*b});
+      timer=setTimeout(function(){if(playing){cur=(cur+1)%TR.length;playTrack()}},tot*1000)}
+    function stop(){playing=false;clearTimeout(timer);nodes.forEach(function(o){try{o.stop()}catch(_){}});nodes=[];bp.textContent='🎵 Musica di Natale'}
+    bp.onclick=function(){if(playing){stop();return}
+      try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.resume)ctx.resume()}catch(_){return}
+      playing=true;bp.textContent='⏸ Pausa';playTrack()};
+    bn.onclick=function(){var was=playing;stop();cur=(cur+1)%TR.length;lt.textContent='♪ '+TR[cur].t;if(was){bp.onclick()}};
+    lt.textContent='♪ '+TR.length+' melodie: '+TR.map(function(x){return x.t.replace(/ \(.*\)/,'')}).join(', ');
+  }
   // FESTA: traguardi da celebrare (riquadro festoso + esplosione di coriandoli)
   function festaBoom(){
     var o=document.createElement('div'); o.className='fb-boom';
