@@ -782,13 +782,13 @@ textarea{min-height:80px;resize:vertical}
       '.xmas-hills{position:fixed;left:0;right:0;bottom:0;height:90px;pointer-events:none;z-index:1;opacity:.9}'+
       'body.xmas #shell{position:relative;z-index:2}'+
       '.xmas-scene{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;mix-blend-mode:screen}'+
-      '.xs-sleigh{position:absolute;top:7vh;left:0;width:min(92vw,560px);animation:xfly 30s linear infinite;filter:drop-shadow(0 0 8px rgba(255,200,90,.5))}'+
+      '.xs-sleigh{position:absolute;top:7vh;left:0;width:min(92vw,560px);animation:xfly 30s linear infinite;filter:contrast(1.3) brightness(1.1)}'+
       '@keyframes xfly{0%{transform:translate(110vw,4vh) rotate(3deg)}50%{transform:translate(10vw,-1vh) rotate(1deg)}62%,100%{transform:translate(-110%,-6vh) rotate(4deg)}}'+
-      '.xs-village{position:absolute;left:50%;bottom:-2px;width:max(100vw,900px);transform:translateX(-50%);animation:xvil 5s ease-in-out infinite}'+
+      '.xs-village{position:absolute;left:0;bottom:-2px;width:100vw;height:min(30vh,42vw);object-fit:cover;object-position:50% 85%;animation:xvil 5s ease-in-out infinite;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 35%);mask-image:linear-gradient(to bottom,transparent,#000 35%)}'+
       '@keyframes xvil{50%{filter:brightness(1.15) saturate(1.1)}}'+
-      '.xs-snowman{position:absolute;left:1vw;bottom:2vh;width:min(26vw,150px);transform-origin:50% 100%;animation:xsway 3.2s ease-in-out infinite alternate}'+
+      '.xs-snowman{position:absolute;left:1vw;bottom:3vh;width:min(24vw,140px);transform-origin:50% 100%;animation:xsway 3.2s ease-in-out infinite alternate;filter:contrast(1.3) brightness(1.05);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%)}'+
       '@keyframes xsway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}'+
-      '.xs-hat{position:absolute;left:-.55em;top:-.62em;width:1.6em;font-size:clamp(32px,8.5vw,54px);transform:rotate(-20deg);mix-blend-mode:screen;pointer-events:none;z-index:3}'+
+      '.xs-hat{position:absolute;left:-.5em;top:-.7em;width:1.35em;font-size:clamp(32px,8.5vw,54px);transform:rotate(-20deg);mix-blend-mode:screen;filter:contrast(1.35) brightness(1.05);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 68%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 68%,transparent 100%);pointer-events:none;z-index:3}'+
       '@media (max-width:460px){.xs-hat{font-size:clamp(20px,6.6vw,30px)}}'+
       /* scritte addobbate */
       'body.xmas .brand h1{position:relative;background:linear-gradient(90deg,#FFE08A,#fff,#F6B92B,#ff5a5a,#FFE08A);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:xshine 6s linear infinite}'+
