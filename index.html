@@ -756,7 +756,7 @@ textarea{min-height:80px;resize:vertical}
       // avviso di benvenuto all'anteprima (una volta per dispositivo)
       var nk='abracadown-natale-avviso';var seenN=false;try{seenN=localStorage.getItem(nk)==='1'}catch(_){}
       if(!seenN){var ov=document.createElement('div');ov.className='xmas-modal';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');
-        ov.innerHTML='<div class="xmas-modal-in"><div class="xm-ico">🎄✨</div><h2>Anteprima segreta!</h2><p>State guardando in anteprima il calendario vestito per Natale: <strong>per ora lo vedete solo voi</strong>, perché gli elfi ci stanno ancora lavorando.</p><p>Il 6 dicembre lo scopriranno tutte le famiglie. Acqua in bocca! 🤫</p><button type="button">Che bello, grazie! 🎁</button></div>';
+        ov.innerHTML='<div class="xmas-modal-in"><div class="xm-ico">🧝‍♂️🎄</div><h2>Psst… sono l’elfo Trillo!</h2><p>Mi hanno mandato dal Polo Nord a addobbare il calendario di Abracadown e ho ancora le mani piene di lucine e fiocchi di neve ❄️</p><p><strong>Siete i primissimi a sbirciare il mio laboratorio:</strong> per ora lo vedete solo voi, perché sto ancora incartando le ultime sorprese.</p><p>Il 6 dicembre apro le porte a tutte le famiglie… fino ad allora, acqua in bocca! 🤫✨</p><button type="button">Promesso, elfo Trillo! 🎁</button></div>';
         document.body.appendChild(ov);ov.querySelector('button').onclick=function(){ov.remove();try{localStorage.setItem(nk,'1')}catch(_){}}}
     }
     if(!$('xmas-css')){var st=document.createElement('style');st.id='xmas-css';st.textContent=
