@@ -782,7 +782,7 @@ textarea{min-height:80px;resize:vertical}
       '.xmas-hills{position:fixed;left:0;right:0;bottom:0;height:90px;pointer-events:none;z-index:1;opacity:.9}'+
       'body.xmas #shell{position:relative;z-index:2}'+
       '.xsn{position:relative;display:inline-block;max-width:100%}'+
-      '.xsn::after{content:attr(data-snow);position:absolute;inset:0;pointer-events:none;color:#fff;-webkit-text-fill-color:#fff;background:none;transform:translateY(-.07em);text-shadow:0 -.03em 0 #fff,.02em -.05em .01em #fff,-.02em -.06em .02em #fff,0 -.08em .03em rgba(255,255,255,.9),0 .02em .03em rgba(120,150,190,.9);-webkit-mask-image:repeating-linear-gradient(to bottom,#000 0,#000 var(--sn,.34em),transparent calc(var(--sn,.34em) + .1em),transparent var(--lh,1.2em));mask-image:repeating-linear-gradient(to bottom,#000 0,#000 var(--sn,.34em),transparent calc(var(--sn,.34em) + .1em),transparent var(--lh,1.2em));filter:drop-shadow(0 .02em .02em rgba(60,90,130,.45))}'+
+      '.xsn::after{content:attr(data-snow);position:absolute;inset:0;pointer-events:none;color:#fff;-webkit-text-fill-color:#fff;background:none;transform:translateY(-.07em);text-shadow:0 -.03em 0 #fff,.02em -.05em .01em #fff,-.02em -.06em .02em #fff,0 -.08em .03em rgba(255,255,255,.9),0 .02em .03em rgba(120,150,190,.9);-webkit-mask-image:var(--snm);mask-image:var(--snm);-webkit-mask-size:3.4em var(--lh,1.2em);mask-size:3.4em var(--lh,1.2em);-webkit-mask-repeat:repeat;mask-repeat:repeat;filter:drop-shadow(0 .02em .02em rgba(60,90,130,.45))}'+
       '.xflake{position:fixed;z-index:9;pointer-events:none;color:#fff;font-size:10px;line-height:1;text-shadow:0 0 4px rgba(255,255,255,.9);animation:xdrop var(--t,2.6s) ease-in forwards}'+
       '@keyframes xdrop{0%{opacity:0;transform:translate(0,-2px) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,6px),var(--dy,90px)) rotate(160deg) scale(1)}}'+
       'body.xmas article.ev,body.xmas .host-note,body.xmas #foot,body.xmas .month>h3{background:rgba(20,8,10,.86);border-radius:16px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}'+
@@ -823,9 +823,13 @@ textarea{min-height:80px;resize:vertical}
     // scene di Natale: illustrazioni (slitta con le renne in volo, villaggio innevato, pupazzo di neve) animate
     if(!document.querySelector('.xmas-scene')){
       var sc=document.createElement('div');sc.className='xmas-scene';sc.setAttribute('aria-hidden','true');
-      sc.innerHTML='<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795531468565_e983569b.mp4" autoplay muted loop playsinline preload="auto"></video>';
+      sc.innerHTML='<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795531917692_3265a946.mp4" autoplay muted playsinline preload="auto"></video><video class="xs-vvid" style="opacity:0" muted playsinline preload="auto"></video>';
       document.body.appendChild(sc);
-      var vv=sc.querySelector('.xs-vvid');if(vv){vv.addEventListener('playing',function(){sc.classList.add('vid')});var pp=vv.play&&vv.play();if(pp&&pp.catch)pp.catch(function(){})}
+      // giro di circa 32 secondi: 4 video da 8 secondi che iniziano e finiscono sulla stessa immagine, montati uno dopo l'altro senza stacchi
+      var LIST=['https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795531917692_3265a946.mp4','https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795531975933_16699850.mp4','https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795531956060_cac5fbfd.mp4','https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795531917692_3265a946.mp4'],vs=sc.querySelectorAll('.xs-vvid'),cur=0,idx=0;
+      if(vs.length===2){vs[0].addEventListener('playing',function(){sc.classList.add('vid')},{once:true});vs[1].src=LIST[1];
+        var swap=function(){var a=vs[cur],b=vs[1-cur];idx=(idx+1)%LIST.length;var q=b.play&&b.play();if(q&&q.catch)q.catch(function(){});b.style.opacity=1;a.style.opacity=0;cur=1-cur;setTimeout(function(){a.src=LIST[(idx+1)%LIST.length];a.load()},300)};
+        vs.forEach(function(v){v.addEventListener('ended',swap)});var pp=vs[0].play&&vs[0].play();if(pp&&pp.catch)pp.catch(function(){})}
     }
     if(window.XMAS_SLEIGH&&!window.__xgift&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))window.__xgift=setInterval(function(){
       if(document.hidden)return;var s=document.querySelector('.xs-sleigh');if(!s)return;var r=s.getBoundingClientRect();
@@ -849,7 +853,12 @@ textarea{min-height:80px;resize:vertical}
     if(!window.__xsnObs){
       var SEL='.brand h1,#shell h2,#shell h3,#vtabs button';
       var wrap=function(){document.querySelectorAll(SEL).forEach(function(el){if(el.querySelector(':scope > .xsn')||el.closest('.xmas-card'))return;
-        var s=document.createElement('span');s.className='xsn';while(el.firstChild&&!(el.firstChild.nodeType===1&&el.firstChild.classList&&el.firstChild.classList.contains('xmas-mini')))s.appendChild(el.firstChild);el.insertBefore(s,el.firstChild);s.setAttribute('data-snow',s.textContent);var cs=getComputedStyle(el),fs=parseFloat(cs.fontSize)||16,lh=parseFloat(cs.lineHeight);if(!lh)lh=fs*1.2;s.style.setProperty('--lh',(lh/fs).toFixed(3)+'em');s.style.setProperty('--sn',Math.max(.2,((lh/fs)-.72)/2+.13).toFixed(3)+'em')})};
+        var s=document.createElement('span');s.className='xsn';while(el.firstChild&&!(el.firstChild.nodeType===1&&el.firstChild.classList&&el.firstChild.classList.contains('xmas-mini')))s.appendChild(el.firstChild);el.insertBefore(s,el.firstChild);s.setAttribute('data-snow',s.textContent);var cs=getComputedStyle(el),fs=parseFloat(cs.fontSize)||16,lh=parseFloat(cs.lineHeight);if(!lh)lh=fs*1.2;s.style.setProperty('--lh',(lh/fs).toFixed(3)+'em');s.style.setProperty('--sn',Math.max(.2,((lh/fs)-.72)/2+.13).toFixed(3)+'em');
+        var f=Math.min(.6,(Math.max(.2,((lh/fs)-.72)/2+.13))/(lh/fs))*100,d='M0 0 H60 V'+f.toFixed(1),x=60;
+        while(x>0){var w=4+Math.random()*7,x2=Math.max(0,x-w),y=f+(Math.random()*7-3.5);
+          if(Math.random()<.22){var mx=(x+x2)/2;d+=' L'+(mx+1.4).toFixed(1)+' '+y.toFixed(1)+' Q'+mx.toFixed(1)+' '+(y+8+Math.random()*9).toFixed(1)+' '+(mx-1.4).toFixed(1)+' '+y.toFixed(1)}
+          d+=' Q'+((x+x2)/2).toFixed(1)+' '+(y+(Math.random()*6-1)).toFixed(1)+' '+x2.toFixed(1)+' '+(f+(Math.random()*4-2)).toFixed(1);x=x2}
+        d+=' Z';s.style.setProperty('--snm','url("data:image/svg+xml,'+encodeURIComponent('<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 60 100\' preserveAspectRatio=\'none\'><path d=\''+d+'\' fill=\'black\'/></svg>')+'")')})};
       wrap();window.__xsnObs=new MutationObserver(function(){clearTimeout(window.__xsnT);window.__xsnT=setTimeout(wrap,50)});
       window.__xsnObs.observe($('shell'),{childList:true,subtree:true});
       if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))setInterval(function(){
