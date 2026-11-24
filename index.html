@@ -774,17 +774,20 @@ textarea{min-height:80px;resize:vertical}
       '.xmas-mini .l{animation:xblink 1.4s ease-in-out infinite}'+
       '.xmas-tree-glow{filter:drop-shadow(0 0 6px rgba(80,255,140,.55))}'+
       /* fondo animato: cielo di Natale che cambia colore, stelline che brillano, colline innevate */
-      'body.xmas{background:linear-gradient(160deg,#071a33,#0d3b2a 35%,#4a0d14 70%,#071a33);background-size:300% 300%;animation:xbg 24s ease-in-out infinite}'+
-      '@keyframes xbg{0%,100%{background-position:0% 30%}50%{background-position:100% 70%}}'+
+      'body.xmas{background:radial-gradient(circle at 82% 12%,rgba(255,250,225,.55) 0,rgba(255,250,225,.18) 3.5%,transparent 9%),radial-gradient(ellipse 120% 45% at 50% 100%,rgba(120,170,230,.55),transparent 70%),linear-gradient(to bottom,#06122b 0%,#0c2350 40%,#1a3f78 75%,#2d5f9e 100%);background-attachment:fixed;background-size:100% 100%;animation:xbg 12s ease-in-out infinite}'+
+      '@keyframes xbg{0%,100%{filter:none}50%{filter:none}}'+
       '.xmas-sky{position:fixed;inset:0;pointer-events:none;z-index:0}'+
       '.xmas-sky s{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;text-decoration:none;box-shadow:0 0 6px 1px rgba(255,240,200,.9);animation:xtw 3s ease-in-out infinite}'+
       '@keyframes xtw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.3)}}'+
       '.xmas-hills{position:fixed;left:0;right:0;bottom:0;height:90px;pointer-events:none;z-index:1;opacity:.9}'+
       'body.xmas #shell{position:relative;z-index:2}'+
+      '.xsn{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 240 22%27%3E%3Cdefs%3E%3ClinearGradient id=%27g%27 x1=%270%27 y1=%270%27 x2=%270%27 y2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%23ffffff%27/%3E%3Cstop offset=%27.7%27 stop-color=%27%23f1f6fc%27/%3E%3Cstop offset=%271%27 stop-color=%27%23c9dcef%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d=%27M0 9 Q6.3 6.3 12.6 9 Q20.6 6.9 28.7 9 Q36.2 4.8 43.6 9 Q48.4 3.7 53.3 9 Q58.0 4.3 62.7 9 Q67.6 6.7 72.4 9 Q79.3 1.4 86.1 9 Q91.3 5.8 96.5 9 Q104.4 0.6 112.4 9 Q120.0 4.5 127.7 9 Q137.6 7.1 147.5 9 Q156.7 5.3 165.9 9 Q171.2 6.6 176.5 9 Q182.7 1.5 188.9 9 Q194.4 3.2 199.9 9 Q207.9 4.7 215.9 9 Q223.4 6.9 230.9 9 Q235.5 5.9 240.0 9 L240 12 Q230.2 13.8 220.5 12 Q211.4 13.7 202.3 12 Q191.7 13.6 181.2 12 Q172.1 15.2 163.1 12 Q156.0 13 155.0 18.9 Q153.0 21 151.0 15 Q150.0 13 142.9 12.5 Q137.1 14.9 131.2 12 Q125.2 13.1 119.1 12 Q109.4 14.4 99.8 12 Q88.6 14.7 77.5 12 Q68.3 14.1 59.2 12 Q48.3 14.2 37.4 12 Q30.8 13 29.8 17.8 Q27.8 21 25.8 15 Q24.8 13 18.1 12.5 Q9.1 15.1 0.0 12 Z%27 fill=%27url%28%23g%29%27/%3E%3C/svg%3E");background-repeat:repeat-x;background-size:10em .9em;background-position:0 .04em;padding-top:.36em;-webkit-box-decoration-break:clone;box-decoration-break:clone;filter:drop-shadow(0 1px 1.5px rgba(0,25,55,.35))}'+
+      '.xflake{position:fixed;z-index:9;pointer-events:none;color:#fff;font-size:10px;line-height:1;text-shadow:0 0 4px rgba(255,255,255,.9);animation:xdrop var(--t,2.6s) ease-in forwards}'+
+      '@keyframes xdrop{0%{opacity:0;transform:translate(0,-2px) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,6px),var(--dy,90px)) rotate(160deg) scale(1)}}'+
       '.xmas-scene{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;mix-blend-mode:screen}'+
       '.xs-sleigh{position:absolute;top:7vh;left:0;width:min(92vw,560px);animation:xfly 30s linear infinite;filter:contrast(1.3) brightness(1.1)}'+
       '@keyframes xfly{0%{transform:translate(110vw,4vh) rotate(3deg)}50%{transform:translate(10vw,-1vh) rotate(1deg)}62%,100%{transform:translate(-110%,-6vh) rotate(4deg)}}'+
-      '.xs-village{position:absolute;left:0;bottom:-2px;width:100vw;height:min(30vh,42vw);object-fit:cover;object-position:50% 62%;animation:xvil 5s ease-in-out infinite;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 35%);mask-image:linear-gradient(to bottom,transparent,#000 35%)}'+
+      '.xs-village{position:absolute;left:0;right:0;bottom:-2px;height:min(34vh,43vw);background:url("https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527777002_cd40802a_1795527777524_cb39089b.png") repeat-x center bottom/auto 100%;animation:xvil 5s ease-in-out infinite}'+
       '@keyframes xvil{50%{filter:brightness(1.15) saturate(1.1)}}'+
       '.xs-snowman{position:absolute;left:1vw;bottom:3vh;width:min(24vw,140px);transform-origin:50% 100%;animation:xsway 3.2s ease-in-out infinite alternate;filter:contrast(1.3) brightness(1.05);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%)}'+
       '@keyframes xsway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}'+
@@ -813,7 +816,7 @@ textarea{min-height:80px;resize:vertical}
     if(!document.querySelector('.xmas-scene')){
       var sc=document.createElement('div');sc.className='xmas-scene';sc.setAttribute('aria-hidden','true');
       sc.innerHTML='<img class="xs-sleigh" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527776357_489acf13_1795527776699_f74882db.png" alt="" decoding="async">'+
-        '<img class="xs-village" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527777002_cd40802a_1795527777524_cb39089b.png" alt="" decoding="async">'+
+        '<div class="xs-village"></div>'+
         '<img class="xs-snowman" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527775519_e0a6a088_1795527775923_64754174.png" alt="" decoding="async">';
       document.body.appendChild(sc);
     }
@@ -821,11 +824,27 @@ textarea{min-height:80px;resize:vertical}
     if(bt&&!bt.querySelector('.xs-hat')){bt.style.position='relative';bt.insertAdjacentHTML('afterbegin','<img class="xs-hat" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527769619_1d47388b_1795527769682_aefd9982.png" alt="" aria-hidden="true">')}
     // lucine sotto la testata
     var br=document.querySelector('.brand');
-    if(br&&!document.querySelector('.xmas-lights')){var li=document.createElement('div');li.className='xmas-lights';li.setAttribute('aria-hidden','true');
+    if(window.XMAS_LIGHTS&&br&&!document.querySelector('.xmas-lights')){var li=document.createElement('div');li.className='xmas-lights';li.setAttribute('aria-hidden','true');
       var cols=['#ff3b3b','#ffd23f','#3bd16f','#4da3ff','#ff8c42'],lh='';for(var j=0;j<22;j++)lh+='<b style="--c:'+cols[j%5]+';--d:'+((j%4)*.4).toFixed(1)+'s"></b>';
       li.innerHTML=lh;br.parentNode.insertBefore(li,br.nextSibling)}
     var h1=document.querySelector('.brand h1');
     if(h1&&!h1.querySelector('.xmas-mini'))h1.insertAdjacentHTML('beforeend','<svg class="xmas-mini" viewBox="0 0 40 50" aria-hidden="true"><polygon points="20,6 6,26 34,26" fill="#1f9a52"/><polygon points="20,16 3,40 37,40" fill="#178a47"/><rect x="17" y="40" width="6" height="7" fill="#6b3f1d"/><polygon points="20,0 22,5 27,5 23,8 24.5,13 20,10 15.5,13 17,8 13,5 18,5" fill="#FFE08A" class="l" style="color:#FFE08A"/><circle class="l" cx="15" cy="22" r="2.2" fill="#ff3b3b" style="color:#ff3b3b;animation-delay:.2s"/><circle class="l" cx="25" cy="24" r="2.2" fill="#4da3ff" style="color:#4da3ff;animation-delay:.7s"/><circle class="l" cx="12" cy="35" r="2.2" fill="#ffd23f" style="color:#ffd23f;animation-delay:1s"/><circle class="l" cx="22" cy="33" r="2.2" fill="#ff8c42" style="color:#ff8c42;animation-delay:.4s"/><circle class="l" cx="30" cy="36" r="2.2" fill="#e45bff" style="color:#e45bff;animation-delay:1.2s"/></svg>');
+    // scritte innevate: la neve si posa sopra le scritte e ogni tanto ne cade qualche fiocco
+    if(!window.__xsnObs){
+      var SEL='.brand h1,#shell h2,#shell h3,#vtabs button';
+      var wrap=function(){document.querySelectorAll(SEL).forEach(function(el){if(el.querySelector(':scope > .xsn')||el.closest('.xmas-card'))return;
+        var s=document.createElement('span');s.className='xsn';while(el.firstChild&&!(el.firstChild.nodeType===1&&el.firstChild.classList&&el.firstChild.classList.contains('xmas-mini')))s.appendChild(el.firstChild);el.insertBefore(s,el.firstChild)})};
+      wrap();window.__xsnObs=new MutationObserver(function(){clearTimeout(window.__xsnT);window.__xsnT=setTimeout(wrap,50)});
+      window.__xsnObs.observe($('shell'),{childList:true,subtree:true});
+      if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))setInterval(function(){
+        if(document.hidden)return;var els=[].slice.call(document.querySelectorAll('.xsn')).filter(function(e){var r=e.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight&&r.width>0});
+        if(!els.length||document.querySelectorAll('.xflake').length>30)return;
+        var e=els[Math.floor(Math.random()*els.length)],rs=e.getClientRects(),r=rs[Math.floor(Math.random()*rs.length)]||e.getBoundingClientRect();
+        var f=document.createElement('i');f.className='xflake';f.textContent=Math.random()<.5?'❄':'•';
+        f.style.left=(r.left+Math.random()*r.width).toFixed(0)+'px';f.style.top=(r.top+r.height*.25).toFixed(0)+'px';
+        f.style.setProperty('--dx',((Math.random()-.5)*30).toFixed(0)+'px');f.style.setProperty('--dy',(60+Math.random()*80).toFixed(0)+'px');f.style.setProperty('--t',(2+Math.random()*1.6).toFixed(1)+'s');
+        f.style.fontSize=(7+Math.random()*7).toFixed(0)+'px';document.body.appendChild(f);setTimeout(function(){f.remove()},4000)},260);
+    }
     // albero con conto alla rovescia
     var xm=new Date(t.getFullYear()+(t.getMonth()===0?-1:0),11,25),n=Math.round((xm-t)/86400000),head,big,sub;
     if(n>1){head='Mancano';big=n+' giorni';sub='a Natale! 🎁'}else if(n===1){head='Domani è';big='Vigilia';sub='…anzi, domani è Natale! 🎅'}else if(n===0){head='Oggi è';big='Natale!';sub='Buon Natale da tutti gli Abracadown 🎄'}else{head='Buone';big='Feste!';sub='Felice anno nuovo dagli Abracadown ✨'}
