@@ -3,9 +3,16 @@
 <script>
 // contatori GoatCounter: richieste in fila (massimo 3 alla volta) e nuovo tentativo se il servizio chiede di rallentare,
 // così il pannello degli accessi non resta vuoto quando le richieste sono tante
-window.gcFetch=(function(){var q=[],run=0,MAX=3;
-  function next(){while(run<MAX&&q.length){(function(it){run++;var tries=0;
-    (function go(){fetch(it.u,it.o).then(function(r){if(r.status===429&&tries++<4){setTimeout(go,900*tries);return}run--;it.res(r);next()}).catch(function(e){if(tries++<2){setTimeout(go,800);return}run--;it.rej(e);next()})})()})(q.shift())}}
+window.gcFetch=(function(){var q=[],run=0,MAX=4;
+  function next(){while(run<MAX&&q.length){(function(it){run++;var tries=0,done=false;
+    function fin(ok,v){if(done)return;done=true;clearTimeout(tm);run--;(ok?it.res:it.rej)(v);next()}
+    var tm=setTimeout(function(){fin(false,new Error('timeout'))},12000);
+    (function go(){var ctl=null,t2;try{ctl=new AbortController();t2=setTimeout(function(){try{ctl.abort()}catch(e){}},7000)}catch(e){}
+      var o={};for(var k in (it.o||{}))o[k]=it.o[k];if(ctl)o.signal=ctl.signal;
+      fetch(it.u,o).then(function(r){clearTimeout(t2);if(r.status===429&&tries++<3&&!done){setTimeout(go,900*tries);return}
+        if(!r.ok){fin(true,{ok:false,status:r.status,json:function(){return Promise.resolve(null)}});return}
+        r.text().then(function(t){var j=null;try{j=JSON.parse(t)}catch(e){}fin(true,{ok:true,status:r.status,json:function(){return Promise.resolve(j)}})},function(e){fin(false,e)})
+      }).catch(function(e){clearTimeout(t2);if(tries++<1&&!done){setTimeout(go,800);return}fin(false,e)})})()})(q.shift())}}
   return function(u,o){return new Promise(function(res,rej){q.push({u:u,o:o,res:res,rej:rej});next()})}})();
 </script>
 <style id="page-style">
@@ -1074,15 +1081,16 @@ textarea{min-height:80px;resize:vertical}
       var f=function(v){return parseInt(String(v).replace(/[^0-9]/g,''),10)||0};
       Promise.all(fam.map(function(x){
         return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent(x.p)+'.json',{cache:'no-store'})
-          .then(function(r){return r.ok?r.json():null}).then(function(j){return {n:x.n,c:j?f(j.count):0}}).catch(function(){return {n:x.n,c:0}});
+          .then(function(r){return r.ok?r.json():null}).then(function(j){return {n:x.n,c:j?f(j.count):0}}).catch(function(){return {n:x.n,c:0,err:1}});
       })).then(function(rows){
+        var bad=rows.filter(function(r){return r.err}).length;
         rows.sort(function(a,b){return b.c-a.c||a.n.localeCompare(b.n)});
         var seen=rows.filter(function(r){return r.c>0});
         $('adm-list').innerHTML=seen.length
           ?'<p style="margin:0 0 8px"><strong>'+seen.length+(seen.length===1?' famiglia è entrata':' famiglie sono entrate')+'</strong> nel calendario.</p><ul class="acc-list">'+seen.map(function(r){
               return '<li><span>'+esc(r.n)+'</span><span class="acc-yes">'+r.c+(r.c===1?' accesso':' accessi')+'</span></li>';
             }).join('')+'</ul>'
-          :'<p style="margin:0">Nessuna famiglia è ancora entrata. Appena qualcuno entra con il proprio codice, comparirà qui.</p>';
+          :'<p style="margin:0">Nessuna famiglia è ancora entrata. Appena qualcuno entra con il proprio codice, comparirà qui.</p>'+(bad?'<p class="note" style="margin:8px 0 0">⚠️ '+bad+' conteggi non sono arrivati (connessione o blocco del browser). Premi Aggiorna.</p>':'');
       });
       (function(){var q=function(x){return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('natale-visto-'+x.p.replace(/^accesso-/,''))+'.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){return j?f(j.count):0}).catch(function(){return 0})};
         var pf=fam.filter(function(x){return XMAS.preview.indexOf(x.p.replace(/^accesso-/,''))>=0});Promise.all(pf.map(function(x){return q(x).then(function(c){return {n:x.n,c:c}})})).then(function(rs){var w=rs.filter(function(r){return r.c});
