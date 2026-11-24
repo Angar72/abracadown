@@ -788,6 +788,7 @@ textarea{min-height:80px;resize:vertical}
       'body.xmas article.ev,body.xmas .host-note,body.xmas #foot,body.xmas .month>h3{background:rgba(20,8,10,.86);border-radius:16px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}'+
       'body.xmas article.ev{padding:12px 14px;box-shadow:0 0 0 1px rgba(246,185,43,.35),0 8px 24px rgba(0,0,0,.35)}body.xmas .host-note,body.xmas #foot{padding:8px 12px}body.xmas .month>h3{display:inline-block;padding:4px 12px;margin-bottom:8px}'+
       '.xmas-scene{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;mix-blend-mode:screen}'+
+      '.xmas-scene>*{mix-blend-mode:screen}'+
       '.xs-sleigh{position:absolute;top:0;left:0;width:min(62vw,360px);filter:contrast(1.8) brightness(1.45) saturate(1.4);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%);--vy:calc(100vh - min(34vh,43vw) - min(26vw,150px));animation:xfly 44s ease-in-out infinite}'+
       '@keyframes xfly{0%{transform:translate(105vw,3vh) rotate(-6deg)}10%{transform:translate(62vw,calc(var(--vy) - 6vh)) rotate(-10deg)}20%{transform:translate(30vw,var(--vy)) rotate(2deg)}30%{transform:translate(-10vw,calc(var(--vy) - 3vh)) rotate(4deg)}34%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(8deg) scaleX(1)}35%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(-8deg) scaleX(-1)}46%{transform:translate(15vw,var(--vy)) rotate(-2deg) scaleX(-1)}58%{transform:translate(52vw,calc(var(--vy) + 2vh)) rotate(2deg) scaleX(-1)}70%{transform:translate(110vw,4vh) rotate(-12deg) scaleX(-1)}71%,100%{transform:translate(110vw,4vh) scaleX(-1);opacity:0}}'+
       '.xgift{position:fixed;z-index:1;pointer-events:none;font-size:20px;line-height:1;filter:drop-shadow(0 0 6px rgba(255,220,120,.8));animation:xgift var(--t,2.4s) cubic-bezier(.45,0,.9,.6) forwards}'+
@@ -822,9 +823,8 @@ textarea{min-height:80px;resize:vertical}
     // scene di Natale: illustrazioni (slitta con le renne in volo, villaggio innevato, pupazzo di neve) animate
     if(!document.querySelector('.xmas-scene')){
       var sc=document.createElement('div');sc.className='xmas-scene';sc.setAttribute('aria-hidden','true');
-      sc.innerHTML='<img class="xs-sleigh" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527776357_489acf13_1795527776699_f74882db.png" alt="" decoding="async">'+
-        '<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795529259424_4f60d4eb.mp4" autoplay muted loop playsinline preload="auto"></video>'+
-        '<img class="xs-snowman" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527775519_e0a6a088_1795527775923_64754174.png" alt="" decoding="async">';
+      sc.innerHTML='<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795529259424_4f60d4eb.mp4" autoplay muted loop playsinline preload="auto"></video>'+
+        '<img class="xs-snowman" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527775519_e0a6a088_1795527775923_64754174.png" alt="" decoding="async">'+'<img class="xs-sleigh" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527776357_489acf13_1795527776699_f74882db.png" alt="" decoding="async">';
       document.body.appendChild(sc);
       var vv=sc.querySelector('.xs-vvid');if(vv){vv.addEventListener('playing',function(){sc.classList.add('vid')});var pp=vv.play&&vv.play();if(pp&&pp.catch)pp.catch(function(){})}
     }
