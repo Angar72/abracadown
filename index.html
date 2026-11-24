@@ -774,9 +774,9 @@ textarea{min-height:80px;resize:vertical}
       '.xmas-mini .l{animation:xblink 1.4s ease-in-out infinite}'+
       '.xmas-tree-glow{filter:drop-shadow(0 0 6px rgba(80,255,140,.55))}'+
       /* fondo animato: cielo di Natale che cambia colore, stelline che brillano, colline innevate */
-      'body.xmas{background:radial-gradient(circle at 82% 12%,rgba(255,250,225,.55) 0,rgba(255,250,225,.18) 3.5%,transparent 9%),radial-gradient(ellipse 120% 45% at 50% 100%,rgba(120,170,230,.55),transparent 70%),linear-gradient(to bottom,#06122b 0%,#0c2350 40%,#1a3f78 75%,#2d5f9e 100%);background-attachment:fixed;background-size:100% 100%;animation:xbg 12s ease-in-out infinite}'+
+      'body.xmas{background:#0c2350}'+
       '@keyframes xbg{0%,100%{filter:none}50%{filter:none}}'+
-      '.xmas-sky{position:fixed;inset:0;pointer-events:none;z-index:0}'+
+      '.xmas-sky{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 82% 12%,rgba(255,250,225,.55) 0,rgba(255,250,225,.18) 3.5%,transparent 9%),radial-gradient(ellipse 120% 45% at 50% 100%,rgba(120,170,230,.55),transparent 70%),linear-gradient(to bottom,#06122b 0%,#0c2350 40%,#1a3f78 75%,#2d5f9e 100%);background-size:100% 100%;}'+
       '.xmas-sky s{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;text-decoration:none;box-shadow:0 0 6px 1px rgba(255,240,200,.9);animation:xtw 3s ease-in-out infinite}'+
       '@keyframes xtw{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.3)}}'+
       '.xmas-hills{position:fixed;left:0;right:0;bottom:0;height:90px;pointer-events:none;z-index:1;opacity:.9}'+
@@ -785,8 +785,10 @@ textarea{min-height:80px;resize:vertical}
       '.xflake{position:fixed;z-index:9;pointer-events:none;color:#fff;font-size:10px;line-height:1;text-shadow:0 0 4px rgba(255,255,255,.9);animation:xdrop var(--t,2.6s) ease-in forwards}'+
       '@keyframes xdrop{0%{opacity:0;transform:translate(0,-2px) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,6px),var(--dy,90px)) rotate(160deg) scale(1)}}'+
       '.xmas-scene{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;mix-blend-mode:screen}'+
-      '.xs-sleigh{position:absolute;top:0;left:0;width:min(70vw,400px);opacity:.9;animation:xfly 30s linear infinite;filter:contrast(1.3) brightness(1.1)}'+
-      '@keyframes xfly{0%{transform:translate(110vw,4vh) rotate(3deg)}50%{transform:translate(10vw,-1vh) rotate(1deg)}62%,100%{transform:translate(-110%,-6vh) rotate(4deg)}}'+
+      '.xs-sleigh{position:absolute;top:0;left:0;width:min(62vw,360px);--vy:calc(100vh - min(34vh,43vw) - min(26vw,150px));animation:xfly 44s ease-in-out infinite}'+
+      '@keyframes xfly{0%{transform:translate(105vw,3vh) rotate(-6deg)}10%{transform:translate(62vw,calc(var(--vy) - 6vh)) rotate(-10deg)}20%{transform:translate(30vw,var(--vy)) rotate(2deg)}30%{transform:translate(-10vw,calc(var(--vy) - 3vh)) rotate(4deg)}34%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(8deg) scaleX(1)}35%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(-8deg) scaleX(-1)}46%{transform:translate(15vw,var(--vy)) rotate(-2deg) scaleX(-1)}58%{transform:translate(52vw,calc(var(--vy) + 2vh)) rotate(2deg) scaleX(-1)}70%{transform:translate(110vw,4vh) rotate(-12deg) scaleX(-1)}71%,100%{transform:translate(110vw,4vh) scaleX(-1);opacity:0}}'+
+      '.xgift{position:fixed;z-index:1;pointer-events:none;font-size:20px;line-height:1;filter:drop-shadow(0 0 6px rgba(255,220,120,.8));animation:xgift var(--t,2.4s) cubic-bezier(.45,0,.9,.6) forwards}'+
+      '@keyframes xgift{0%{opacity:0;transform:translate(0,0) scale(.4) rotate(0)}12%{opacity:1;transform:translate(0,6px) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--dy,120px)) scale(.8) rotate(var(--r,40deg))}}'+
       '.xs-village{position:absolute;left:0;right:0;bottom:-2px;height:min(34vh,43vw);background:url("https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527777002_cd40802a_1795527777524_cb39089b.png") repeat-x center bottom/auto 100%;animation:xvil 5s ease-in-out infinite}'+
       '@keyframes xvil{50%{filter:brightness(1.15) saturate(1.1)}}'+
       '.xs-snowman{position:absolute;left:1vw;bottom:3vh;width:min(24vw,140px);transform-origin:50% 100%;animation:xsway 3.2s ease-in-out infinite alternate;filter:contrast(1.3) brightness(1.05);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%)}'+
@@ -820,6 +822,15 @@ textarea{min-height:80px;resize:vertical}
         '<img class="xs-snowman" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527775519_e0a6a088_1795527775923_64754174.png" alt="" decoding="async">';
       document.body.appendChild(sc);
     }
+    if(!window.__xgift&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))window.__xgift=setInterval(function(){
+      if(document.hidden)return;var s=document.querySelector('.xs-sleigh');if(!s)return;var r=s.getBoundingClientRect();
+      if(r.right<0||r.left>innerWidth||r.top<innerHeight*.28)return;
+      var m=new DOMMatrix(getComputedStyle(s).transform),flip=m.a<0;
+      var g=document.createElement('i');g.className='xgift';g.textContent=['🎁','🎁','🎀','⭐'][Math.floor(Math.random()*4)];
+      g.style.left=(r.left+r.width*(flip?.2:.78)).toFixed(0)+'px';g.style.top=(r.top+r.height*.6).toFixed(0)+'px';
+      g.style.setProperty('--dx',((flip?1:-1)*(10+Math.random()*30)).toFixed(0)+'px');g.style.setProperty('--dy',(innerHeight-r.top-r.height*.6-Math.random()*60-20).toFixed(0)+'px');
+      g.style.setProperty('--r',((Math.random()-.5)*120).toFixed(0)+'deg');g.style.setProperty('--t',(1.8+Math.random()*.8).toFixed(1)+'s');
+      document.body.appendChild(g);setTimeout(function(){g.remove()},3000)},700);
     var bt=document.querySelector('.brand-text');
     if(bt&&!bt.querySelector('.xs-hat')){bt.style.position='relative';bt.insertAdjacentHTML('afterbegin','<img class="xs-hat" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527769619_1d47388b_1795527769682_aefd9982.png" alt="" aria-hidden="true">')}
     // lucine sotto la testata
