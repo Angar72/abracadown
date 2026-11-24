@@ -790,6 +790,8 @@ textarea{min-height:80px;resize:vertical}
       '@keyframes xfly{0%{transform:translate(105vw,3vh) rotate(-6deg)}10%{transform:translate(62vw,calc(var(--vy) - 6vh)) rotate(-10deg)}20%{transform:translate(30vw,var(--vy)) rotate(2deg)}30%{transform:translate(-10vw,calc(var(--vy) - 3vh)) rotate(4deg)}34%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(8deg) scaleX(1)}35%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(-8deg) scaleX(-1)}46%{transform:translate(15vw,var(--vy)) rotate(-2deg) scaleX(-1)}58%{transform:translate(52vw,calc(var(--vy) + 2vh)) rotate(2deg) scaleX(-1)}70%{transform:translate(110vw,4vh) rotate(-12deg) scaleX(-1)}71%,100%{transform:translate(110vw,4vh) scaleX(-1);opacity:0}}'+
       '.xgift{position:fixed;z-index:1;pointer-events:none;font-size:20px;line-height:1;filter:drop-shadow(0 0 6px rgba(255,220,120,.8));animation:xgift var(--t,2.4s) cubic-bezier(.45,0,.9,.6) forwards}'+
       '@keyframes xgift{0%{opacity:0;transform:translate(0,0) scale(.4) rotate(0)}12%{opacity:1;transform:translate(0,6px) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--dy,120px)) scale(.8) rotate(var(--r,40deg))}}'+
+      '.xs-vvid{position:absolute;left:0;bottom:0;width:100vw;height:min(56.25vw,58vh);object-fit:cover;object-position:50% 82%}'+
+      '.xmas-scene.vid .xs-village{display:none}'+
       '.xs-village{position:absolute;left:0;right:0;bottom:-2px;height:min(34vh,43vw);background:url("https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527777002_cd40802a_1795527777524_cb39089b.png") repeat-x center bottom/auto 100%;animation:xvil 5s ease-in-out infinite}'+
       '@keyframes xvil{50%{filter:brightness(1.15) saturate(1.1)}}'+
       '.xs-snowman{position:absolute;left:1vw;bottom:3vh;width:min(24vw,140px);transform-origin:50% 100%;animation:xsway 3.2s ease-in-out infinite alternate;filter:contrast(1.3) brightness(1.05);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%)}'+
@@ -819,9 +821,10 @@ textarea{min-height:80px;resize:vertical}
     if(!document.querySelector('.xmas-scene')){
       var sc=document.createElement('div');sc.className='xmas-scene';sc.setAttribute('aria-hidden','true');
       sc.innerHTML='<img class="xs-sleigh" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527776357_489acf13_1795527776699_f74882db.png" alt="" decoding="async">'+
-        '<div class="xs-village"></div>'+
+        '<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795529259424_4f60d4eb.mp4" autoplay muted loop playsinline preload="auto"></video>'+
         '<img class="xs-snowman" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527775519_e0a6a088_1795527775923_64754174.png" alt="" decoding="async">';
       document.body.appendChild(sc);
+      var vv=sc.querySelector('.xs-vvid');if(vv){vv.addEventListener('playing',function(){sc.classList.add('vid')});var pp=vv.play&&vv.play();if(pp&&pp.catch)pp.catch(function(){})}
     }
     if(!window.__xgift&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))window.__xgift=setInterval(function(){
       if(document.hidden)return;var s=document.querySelector('.xs-sleigh');if(!s)return;var r=s.getBoundingClientRect();
