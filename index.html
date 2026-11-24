@@ -944,15 +944,19 @@ textarea{min-height:80px;resize:vertical}
       var g2=ctx.createGain();g2.gain.value=.25;o2.connect(g2);g2.connect(g);o.connect(g);g.connect(ctx.destination);
       g.gain.setValueAtTime(0.0001,when);g.gain.exponentialRampToValueAtTime(0.22,when+0.015);g.gain.exponentialRampToValueAtTime(0.0001,when+Math.max(0.35,dur*1.4));
       o.start(when);o2.start(when);o.stop(when+dur*1.5+0.4);o2.stop(when+dur*1.5+0.4);nodes.push(o,o2)}
-    function playTrack(){var tr=TR[cur],b=60/tr.bpm,at=ctx.currentTime+0.08,tot=0;lt.textContent='♪ '+tr.t;
+    function playTrack(){var tr=TR[cur],b=60/tr.bpm,at=ctx.currentTime+0.08,tot=0;
       tr.n.forEach(function(x){if(x[0]!==null)bell(440*Math.pow(2,(x[0]-69)/12),at+tot,x[1]*b);tot+=x[1]*b});
       timer=setTimeout(function(){if(playing){cur=(cur+1)%TR.length;playTrack()}},tot*1000)}
     function stop(){playing=false;clearTimeout(timer);nodes.forEach(function(o){try{o.stop()}catch(_){}});nodes=[];bp.textContent='🎵 Musica di Natale'}
-    bp.onclick=function(){if(playing){stop();return}
+    bp.onclick=function(e){if(playing){stop();if(e)try{localStorage.setItem('abracadown-xm-off','1')}catch(_){}return}if(e)try{localStorage.removeItem('abracadown-xm-off')}catch(_){}
       try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.resume)ctx.resume()}catch(_){return}
       playing=true;bp.textContent='⏸ Pausa';playTrack()};
     bn.onclick=function(){var was=playing;stop();cur=(cur+1)%TR.length;lt.textContent='♪ '+TR[cur].t;if(was){bp.onclick()}};
-    lt.textContent='♪ '+TR.length+' melodie: '+TR.map(function(x){return x.t.replace(/ \(.*\)/,'')}).join(', ');
+    lt.style.display='none';
+    // la musica parte da sola al primo tocco sulla pagina (i telefoni non permettono di farla partire prima); chi la mette in pausa non la sente ripartire
+    var off=false;try{off=localStorage.getItem('abracadown-xm-off')==='1'}catch(_){}
+    var auto=function(ev){if(ev&&ev.target&&ev.target.closest&&ev.target.closest('.xmas-music'))return;['pointerdown','touchend','keydown','click'].forEach(function(ev){document.removeEventListener(ev,auto,true)});if(!playing&&!off)bp.onclick()};
+    if(!off)['pointerdown','touchend','keydown','click'].forEach(function(ev){document.addEventListener(ev,auto,true)});
   }
   // FESTA: traguardi da celebrare (riquadro festoso + esplosione di coriandoli)
   function festaBoom(){
