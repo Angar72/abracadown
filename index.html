@@ -787,6 +787,10 @@ textarea{min-height:80px;resize:vertical}
       '@keyframes xdrop{0%{opacity:0;transform:translate(0,-2px) scale(.6)}15%{opacity:1}100%{opacity:0;transform:translate(var(--dx,6px),var(--dy,90px)) rotate(160deg) scale(1)}}'+
       'body.xmas article.ev,body.xmas .host-note,body.xmas #foot,body.xmas .month>h3{background:rgba(20,8,10,.86);border-radius:16px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}'+
       'body.xmas article.ev{padding:12px 14px;box-shadow:0 0 0 1px rgba(246,185,43,.35),0 8px 24px rgba(0,0,0,.35)}body.xmas .host-note,body.xmas #foot{padding:8px 12px}body.xmas .month>h3{display:inline-block;padding:4px 12px;margin-bottom:8px}'+
+      'body.xmas .brand h1.xs-has{font-size:0;line-height:0;color:transparent;-webkit-text-fill-color:transparent;text-shadow:none}'+
+      'body.xmas .brand h1.xs-has .xmas-mini{font-size:clamp(32px,8.5vw,54px);vertical-align:middle}'+
+      '.xs-title{display:inline-block;vertical-align:middle;height:clamp(64px,17vw,112px);width:auto;margin:clamp(-14px,-2.6vw,-8px) 0 clamp(-12px,-2.4vw,-6px) clamp(-12px,-2.2vw,-6px);mix-blend-mode:screen;filter:contrast(1.15)}'+
+      '.xs-hat,.xsn::after{display:none!important}'+
       '.xmas-scene{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;mix-blend-mode:screen}'+
       '.xmas-scene>*{mix-blend-mode:screen}'+
       '.xs-sleigh{position:absolute;top:0;left:0;width:min(62vw,360px);filter:contrast(1.8) brightness(1.45) saturate(1.4);-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%);--vy:calc(100vh - min(34vh,43vw) - min(26vw,150px));animation:xfly 44s ease-in-out infinite}'+
@@ -848,6 +852,7 @@ textarea{min-height:80px;resize:vertical}
       var cols=['#ff3b3b','#ffd23f','#3bd16f','#4da3ff','#ff8c42'],lh='';for(var j=0;j<22;j++)lh+='<b style="--c:'+cols[j%5]+';--d:'+((j%4)*.4).toFixed(1)+'s"></b>';
       li.innerHTML=lh;br.parentNode.insertBefore(li,br.nextSibling)}
     var h1=document.querySelector('.brand h1');
+    if(h1&&!h1.querySelector('.xs-title')){h1.classList.add('xs-has');var ti=document.createElement('img');ti.className='xs-title';ti.src='https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795536231624_be39b4a0_1795536232035_ae557234.png';ti.alt='';ti.setAttribute('aria-hidden','true');h1.insertBefore(ti,h1.firstChild)}
     if(h1&&!h1.querySelector('.xmas-mini'))h1.insertAdjacentHTML('beforeend','<svg class="xmas-mini" viewBox="0 0 40 50" aria-hidden="true"><polygon points="20,6 6,26 34,26" fill="#1f9a52"/><polygon points="20,16 3,40 37,40" fill="#178a47"/><rect x="17" y="40" width="6" height="7" fill="#6b3f1d"/><polygon points="20,0 22,5 27,5 23,8 24.5,13 20,10 15.5,13 17,8 13,5 18,5" fill="#FFE08A" class="l" style="color:#FFE08A"/><circle class="l" cx="15" cy="22" r="2.2" fill="#ff3b3b" style="color:#ff3b3b;animation-delay:.2s"/><circle class="l" cx="25" cy="24" r="2.2" fill="#4da3ff" style="color:#4da3ff;animation-delay:.7s"/><circle class="l" cx="12" cy="35" r="2.2" fill="#ffd23f" style="color:#ffd23f;animation-delay:1s"/><circle class="l" cx="22" cy="33" r="2.2" fill="#ff8c42" style="color:#ff8c42;animation-delay:.4s"/><circle class="l" cx="30" cy="36" r="2.2" fill="#e45bff" style="color:#e45bff;animation-delay:1.2s"/></svg>');
     if(!document.getElementById('xsnow-defs')){var sd=document.createElement('div');sd.id='xsnow-defs';sd.setAttribute('aria-hidden','true');sd.style.cssText='position:absolute;width:0;height:0;overflow:hidden';
       var F=function(id,r,sc,b,ss){return '<filter id="'+id+'" x="-8%" y="-60%" width="116%" height="220%" color-interpolation-filters="sRGB">'+
@@ -869,7 +874,7 @@ textarea{min-height:80px;resize:vertical}
       sd.innerHTML='<svg width="0" height="0"><defs>'+F('xsnowL',1.6,6,1.4,1.6)+F('xsnowS',.7,2.5,.6,.8)+'</defs></svg>';document.body.appendChild(sd)}
     // scritte innevate: la neve si posa sopra le scritte e ogni tanto ne cade qualche fiocco
     if(!window.__xsnObs){
-      var SEL='.brand h1,#shell h2,#shell h3,#vtabs button';
+      var SEL='#shell h2,#shell h3,#vtabs button';
       var wrap=function(){document.querySelectorAll(SEL).forEach(function(el){if(el.querySelector(':scope > .xsn')||el.closest('.xmas-card'))return;
         var s=document.createElement('span');s.className='xsn';while(el.firstChild&&!(el.firstChild.nodeType===1&&el.firstChild.classList&&el.firstChild.classList.contains('xmas-mini')))s.appendChild(el.firstChild);el.insertBefore(s,el.firstChild);s.setAttribute('data-snow',s.textContent);var cs=getComputedStyle(el),fs=parseFloat(cs.fontSize)||16,lh=parseFloat(cs.lineHeight);if(!lh)lh=fs*1.2;s.style.setProperty('--lh',(lh/fs).toFixed(3)+'em');s.style.setProperty('--sn',Math.max(.2,((lh/fs)-.72)/2+.13).toFixed(3)+'em');
         s.style.setProperty('--snf',fs>=24?'url(#xsnowL)':'url(#xsnowS)')})};
