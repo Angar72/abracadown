@@ -1,5 +1,13 @@
 <!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#120607"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Abracadown"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png"><script>if(!/iPhone|iPad|iPod/.test(navigator.userAgent)){var l=document.createElement("link");l.rel="manifest";l.href="manifest.webmanifest";document.head.appendChild(l)}</script><style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><script>window.GC_SITE="abracadown"</script><script data-goatcounter="https://abracadown.goatcounter.com/count" data-goatcounter-settings='{"allow_local":false}' async src="https://gc.zgo.at/count.js"></script></head><body><title>Calendario Abracadown</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Dancing+Script:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<script>
+// contatori GoatCounter: richieste in fila (massimo 3 alla volta) e nuovo tentativo se il servizio chiede di rallentare,
+// così il pannello degli accessi non resta vuoto quando le richieste sono tante
+window.gcFetch=(function(){var q=[],run=0,MAX=3;
+  function next(){while(run<MAX&&q.length){(function(it){run++;var tries=0;
+    (function go(){fetch(it.u,it.o).then(function(r){if(r.status===429&&tries++<4){setTimeout(go,900*tries);return}run--;it.res(r);next()}).catch(function(e){if(tries++<2){setTimeout(go,800);return}run--;it.rej(e);next()})})()})(q.shift())}}
+  return function(u,o){return new Promise(function(res,rej){q.push({u:u,o:o,res:res,rej:rej});next()})}})();
+</script>
 <style id="page-style">
 /* Layout: locandina da palcoscenico — insegna con lampadine, Giulia che presenta, cartellone con date in box rossi come il tour 2026/2027. Tema unico scuro, scelto di proposito. */
 :root{
@@ -407,7 +415,7 @@ textarea{min-height:80px;resize:vertical}
       // sito indipendente: contatore GoatCounter letto in tempo reale
       sh='<div class="stats"><span class="stats-n" id="gc-n">…</span><span><span id="gc-l">visite</span> al calendario<span id="gc-u"></span> <small>(in tempo reale)</small></span></div>';
       setTimeout(function(){
-        fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/TOTAL.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){
+        gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/TOTAL.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){
           var el=document.getElementById('gc-n'); if(!el)return;
           var f=function(v){return String(v).replace(/[^0-9]/g,'').replace(/\B(?=(\d{3})+$)/g,'.')};
           if(j&&j.count!=null){el.textContent=f(j.count);var l=document.getElementById('gc-l');if(l)l.textContent=f(j.count)==='1'?'visita':'visite';var u=document.getElementById('gc-u');if(u&&j.count_unique!=null)u.textContent=' · '+f(j.count_unique)+(f(j.count_unique)==='1'?' persona':' persone diverse')}else{el.parentNode.hidden=true}
@@ -694,7 +702,7 @@ textarea{min-height:80px;resize:vertical}
     CS.decrypt({name:'AES-GCM',iv:ub(DATA.adm.iv)},KEKEY,ub(DATA.adm.ct)).then(function(pt){
       var fam=JSON.parse(TD.decode(pt)).map(function(x){return {n:x.n,w:String(x.p).replace(/^accesso-/,'')}});
       return Promise.all(fam.map(function(x){
-        return fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('compleanni-'+x.w)+'.json',{cache:'no-store'})
+        return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('compleanni-'+x.w)+'.json',{cache:'no-store'})
           .then(function(r){return r.ok?r.json():null}).then(function(j){return {n:x.n,ok:!!(j&&parseInt(String(j.count).replace(/[^0-9]/g,''),10))}}).catch(function(){return {n:x.n,ok:false}});
       }));
     }).then(function(rows){
@@ -1040,7 +1048,7 @@ textarea{min-height:80px;resize:vertical}
         var fam2=fam.filter(function(x){return !a.byWho||x.w!==a.byWho});
         box.hidden=false; box.textContent='Controllo chi ha letto…';
         Promise.all(fam2.map(function(x){
-          return fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('letto-'+a.id+'-'+x.w)+'.json',{cache:'no-store'})
+          return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('letto-'+a.id+'-'+x.w)+'.json',{cache:'no-store'})
             .then(function(r){return r.ok?r.json():null}).then(function(j){return {n:x.n,ok:!!(j&&parseInt(String(j.count).replace(/[^0-9]/g,''),10))}})
             .catch(function(){return {n:x.n,ok:false}});
         })).then(function(rows){
@@ -1065,7 +1073,7 @@ textarea{min-height:80px;resize:vertical}
       $('adm-reload').onclick=adminPanel;
       var f=function(v){return parseInt(String(v).replace(/[^0-9]/g,''),10)||0};
       Promise.all(fam.map(function(x){
-        return fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent(x.p)+'.json',{cache:'no-store'})
+        return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent(x.p)+'.json',{cache:'no-store'})
           .then(function(r){return r.ok?r.json():null}).then(function(j){return {n:x.n,c:j?f(j.count):0}}).catch(function(){return {n:x.n,c:0}});
       })).then(function(rows){
         rows.sort(function(a,b){return b.c-a.c||a.n.localeCompare(b.n)});
@@ -1076,13 +1084,13 @@ textarea{min-height:80px;resize:vertical}
             }).join('')+'</ul>'
           :'<p style="margin:0">Nessuna famiglia è ancora entrata. Appena qualcuno entra con il proprio codice, comparirà qui.</p>';
       });
-      (function(){var q=function(x){return fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('natale-visto-'+x.p.replace(/^accesso-/,''))+'.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){return j?f(j.count):0}).catch(function(){return 0})};
-        Promise.all(fam.map(function(x){return q(x).then(function(c){return {n:x.n,c:c}})})).then(function(rs){var w=rs.filter(function(r){return r.c});
+      (function(){var q=function(x){return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent('natale-visto-'+x.p.replace(/^accesso-/,''))+'.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){return j?f(j.count):0}).catch(function(){return 0})};
+        var pf=fam.filter(function(x){return XMAS.preview.indexOf(x.p.replace(/^accesso-/,''))>=0});Promise.all(pf.map(function(x){return q(x).then(function(c){return {n:x.n,c:c}})})).then(function(rs){var w=rs.filter(function(r){return r.c});
           var d=document.createElement('div');d.style.marginTop='14px';d.id='adm-xmas';
           d.innerHTML='<h3 style="margin:0 0 6px">🎄 Anteprima di Natale vista da</h3>'+(w.length?'<ul class="acc-list">'+w.map(function(r){return '<li><span>'+esc(r.n)+'</span><span class="acc-yes">vista ✓</span></li>'}).join('')+'</ul>':'<p style="margin:0">Nessuno ancora.</p>');
           var old=$('adm-xmas');if(old)old.remove();$('adm-list').parentNode.insertBefore(d,$('adm-list').nextSibling)})})();
-      var sp=STATE.spot; if(sp){var sid=(sp.id||sp.from||'spot').replace(/[^a-z0-9-]/gi,'');
-        var q=function(kind,x){return fetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent(kind+'-'+sid+'-'+x.p.replace(/^accesso-/,''))+'.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){return j?f(j.count):0}).catch(function(){return 0})};
+      var sp=STATE.spot; if(sp&&todayD()<=new Date(parse(sp.until).getTime()+2*864e5)){var sid=(sp.id||sp.from||'spot').replace(/[^a-z0-9-]/gi,'');
+        var q=function(kind,x){return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent(kind+'-'+sid+'-'+x.p.replace(/^accesso-/,''))+'.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){return j?f(j.count):0}).catch(function(){return 0})};
         Promise.all(fam.map(function(x){return Promise.all([q('spotvisto',x),q('spotaudio',x)]).then(function(a){return {n:x.n,v:a[0],a:a[1]}})})).then(function(rs){
           var w=rs.filter(function(r){return r.v||r.a});
           var d=document.createElement('div'); d.style.marginTop='14px';
