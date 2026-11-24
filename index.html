@@ -932,6 +932,7 @@ textarea{min-height:80px;resize:vertical}
     card.querySelector('div').insertAdjacentHTML('beforeend','<div class="xmas-music"><button type="button" class="xm-play">🎵 Musica di Natale</button><button type="button" class="xm-next" title="Brano successivo" aria-label="Brano successivo">⏭</button><span class="xm-title"></span></div>');
     var host=$('next');if(host&&host.parentNode)host.parentNode.insertBefore(card,host);else $('shell').appendChild(card);
     xmasMusic(card);
+    var ft=$('foot');if(ft&&!$('xm-credit')){var cr=document.createElement('p');cr.id='xm-credit';cr.style.cssText='margin:6px 0 0;font-size:.7rem;opacity:.7';cr.textContent='Musiche di Natale: bande e coro militari USA (pubblico dominio); «Jingle Bells» di Kevin MacLeod (incompetech.com), licenza CC BY 4.0. Fonte: Wikimedia Commons.';ft.appendChild(cr)}
   }
   // Musica: melodie natalizie tradizionali (di pubblico dominio), suonate dal telefono con un suono di campanelli.
   function xmasMusic(card){
@@ -939,30 +940,28 @@ textarea{min-height:80px;resize:vertical}
       '.xmas-music{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}'+
       '.xmas-music button{font:inherit;font-weight:700;border:0;border-radius:99px;padding:6px 14px;background:var(--gold);color:#3a0a0d;cursor:pointer}'+
       '.xmas-music .xm-next{padding:6px 10px}.xmas-music .xm-title{font-size:.85rem;color:#f3e7c9}';
-    var N={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
-    function m(s){var r=/^([A-G])(#?)(\d)$/.exec(s);return 12*(+r[3]+1)+N[r[1]]+(r[2]?1:0)}
-    function seq(str){return str.trim().split(/\s+/).map(function(t){var p=t.split(':');return [p[0]==='r'?null:m(p[0]),+(p[1]||1)]})}
+    // brani natalizi famosi in registrazioni vere e libere da diritti (bande e coro militari USA = pubblico dominio; Jingle Bells di Kevin MacLeod, CC BY 4.0), ospitati su Wikimedia Commons
+    var W='https://upload.wikimedia.org/wikipedia/commons/',TC=W+'transcoded/';
     var TR=[
-      {t:'Jingle Bells',bpm:200,n:seq('E5 E5 E5:2 E5 E5 E5:2 E5 G5 C5:1.5 D5:0.5 E5:4 F5 F5 F5:1.5 F5:0.5 F5 E5 E5 E5:0.5 E5:0.5 E5 D5 D5 E5 D5:2 G5:2 E5 E5 E5:2 E5 E5 E5:2 E5 G5 C5:1.5 D5:0.5 E5:4 F5 F5 F5:1.5 F5:0.5 F5 E5 E5 E5:0.5 E5:0.5 G5 G5 F5 D5 C5:4 r:2')},
-      {t:'We Wish You a Merry Christmas',bpm:170,n:seq('D5 G5 G5:0.5 A5:0.5 G5:0.5 F#5:0.5 E5 E5 E5 A5 A5:0.5 B5:0.5 A5:0.5 G5:0.5 F#5 D5 D5 B5 B5:0.5 C6:0.5 B5:0.5 A5:0.5 G5 E5 D5:0.5 D5:0.5 E5 A5 F#5 G5:3 r:2')},
-      {t:'Deck the Halls',bpm:160,n:seq('G5:1.5 F5:0.5 E5 D5 C5 D5 E5 C5 D5:0.5 E5:0.5 F5:0.5 D5:0.5 E5:1.5 D5:0.5 C5 B4 C5:2 G5:1.5 F5:0.5 E5 D5 C5 D5 E5 C5 D5:0.5 E5:0.5 F5:0.5 D5:0.5 E5:1.5 D5:0.5 C5 B4 C5:2 D5:1.5 E5:0.5 F5 D5 E5:1.5 F5:0.5 G5 D5 E5:0.5 F#5:0.5 G5 A5:0.5 B5:0.5 C6 B5 A5 G5:2 G5:1.5 F5:0.5 E5 D5 C5 D5 E5 C5 A5:0.5 A5:0.5 A5:0.5 A5:0.5 G5:1.5 F5:0.5 E5 D5 C5:2 r:2')},
-      {t:'Astro del Ciel (Silent Night)',bpm:110,n:seq('G5:1.5 A5:0.5 G5 E5:3 G5:1.5 A5:0.5 G5 E5:3 D6:2 D6 B5:3 C6:2 C6 G5:3 A5:2 A5 C6:1.5 B5:0.5 A5 G5:1.5 A5:0.5 G5 E5:3 A5:2 A5 C6:1.5 B5:0.5 A5 G5:1.5 A5:0.5 G5 E5:3 D6:2 D6 F6:1.5 D6:0.5 B5 C6:3 E6:3 C6 G5 E5 G5:1.5 F5:0.5 D5 C5:4 r:2')},
-      {t:'O Tannenbaum',bpm:120,n:seq('D5 G5:0.75 G5:0.25 G5:1.5 A5:0.5 B5:0.75 B5:0.25 B5:1.5 B5:0.5 A5 B5 C6 F#5 A5 G5 r D5 G5:0.75 G5:0.25 G5:1.5 A5:0.5 B5:0.75 B5:0.25 B5:1.5 B5:0.5 A5 B5 C6 F#5 A5 G5:2 r:2')}
+      {t:'Jingle Bells',mp3:TC+'4/4f/Jingle_Bells_%28Calm%29_%28Kevin_MacLeod%29_%28ISRC_USUAN1100188%29.oga/Jingle_Bells_%28Calm%29_%28Kevin_MacLeod%29_%28ISRC_USUAN1100188%29.oga.mp3',ogg:W+'4/4f/Jingle_Bells_%28Calm%29_%28Kevin_MacLeod%29_%28ISRC_USUAN1100188%29.oga'},
+      {t:'Deck the Halls',mp3:TC+'5/53/Deck_the_Halls_%28USAFB_Concert_Band%29.ogg/Deck_the_Halls_%28USAFB_Concert_Band%29.ogg.mp3',ogg:W+'5/53/Deck_the_Halls_%28USAFB_Concert_Band%29.ogg'},
+      {t:'Silent Night',mp3:TC+'a/a0/Silent_Night_%28choral%29.ogg/Silent_Night_%28choral%29.ogg.mp3',ogg:W+'a/a0/Silent_Night_%28choral%29.ogg'},
+      {t:'O Tannenbaum',mp3:TC+'b/bc/U.S._Army_Band_-_O_Tannenbaum.ogg/U.S._Army_Band_-_O_Tannenbaum.ogg.mp3',ogg:W+'b/bc/U.S._Army_Band_-_O_Tannenbaum.ogg'},
+      {t:'Angels We Have Heard on High',mp3:TC+'8/87/U.S._Army_Band_-_Angels_We_Have_Heard_on_High.ogg/U.S._Army_Band_-_Angels_We_Have_Heard_on_High.ogg.mp3',ogg:W+'8/87/U.S._Army_Band_-_Angels_We_Have_Heard_on_High.ogg'},
+      {t:'O Holy Night',mp3:W+'8/87/O_Holy_Night_-_Concert_Band_-_United_States_Air_Force_Heritage_of_America_Band.mp3'}
     ];
-    var ctx=null,cur=0,playing=false,timer=null,nodes=[];
+    var cur=0,playing=false,au=new Audio();au.preload='auto';au.volume=.75;var triedOgg=false,fails=0;
     var bp=card.querySelector('.xm-play'),bn=card.querySelector('.xm-next'),lt=card.querySelector('.xm-title');
-    function bell(f,when,dur){var o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o2.type='triangle';o.frequency.value=f;o2.frequency.value=f*2;
-      var g2=ctx.createGain();g2.gain.value=.25;o2.connect(g2);g2.connect(g);o.connect(g);g.connect(ctx.destination);
-      g.gain.setValueAtTime(0.0001,when);g.gain.exponentialRampToValueAtTime(0.22,when+0.015);g.gain.exponentialRampToValueAtTime(0.0001,when+Math.max(0.35,dur*1.4));
-      o.start(when);o2.start(when);o.stop(when+dur*1.5+0.4);o2.stop(when+dur*1.5+0.4);nodes.push(o,o2)}
-    function playTrack(){var tr=TR[cur],b=60/tr.bpm,at=ctx.currentTime+0.08,tot=0;
-      tr.n.forEach(function(x){if(x[0]!==null)bell(440*Math.pow(2,(x[0]-69)/12),at+tot,x[1]*b);tot+=x[1]*b});
-      timer=setTimeout(function(){if(playing){cur=(cur+1)%TR.length;playTrack()}},tot*1000)}
-    function stop(){playing=false;clearTimeout(timer);nodes.forEach(function(o){try{o.stop()}catch(_){}});nodes=[];bp.textContent='🎵 Musica di Natale'}
+    function load(i){cur=(i+TR.length)%TR.length;triedOgg=false;au.src=TR[cur].mp3}
+    function go(){var q=au.play();if(q&&q.catch)q.catch(function(){})}
+    au.addEventListener('ended',function(){fails=0;load(cur+1);if(playing)go()});
+    au.addEventListener('playing',function(){fails=0});
+    au.addEventListener('error',function(){var tr=TR[cur];if(!triedOgg&&tr.ogg){triedOgg=true;au.src=tr.ogg;if(playing)go();return}if(++fails<TR.length){load(cur+1);if(playing)go()}});
+    load(0);
+    function stop(){playing=false;au.pause();bp.textContent='🎵 Musica di Natale'}
     bp.onclick=function(e){if(playing){stop();if(e)try{localStorage.setItem('abracadown-xm-off','1')}catch(_){}return}if(e)try{localStorage.removeItem('abracadown-xm-off')}catch(_){}
-      try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.resume)ctx.resume()}catch(_){return}
-      playing=true;bp.textContent='⏸ Pausa';playTrack()};
-    bn.onclick=function(){var was=playing;stop();cur=(cur+1)%TR.length;lt.textContent='♪ '+TR[cur].t;if(was){bp.onclick()}};
+      playing=true;bp.textContent='⏸ Pausa';go()};
+    bn.onclick=function(){load(cur+1);if(playing)go()};
     lt.style.display='none';
     // la musica parte da sola al primo tocco sulla pagina (i telefoni non permettono di farla partire prima); chi la mette in pausa non la sente ripartire
     var off=false;try{off=localStorage.getItem('abracadown-xm-off')==='1'}catch(_){}
