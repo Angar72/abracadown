@@ -751,8 +751,8 @@ textarea{min-height:80px;resize:vertical}
     if($('xmas-card'))return;
     document.body.classList.add('xmas');
     if(!$('xmas-css')){var st=document.createElement('style');st.id='xmas-css';st.textContent=
-      '.xmas-snow{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden}'+
-      '.xmas-snow i{position:absolute;top:-6vh;color:#fff;opacity:.85;font-style:normal;text-shadow:0 0 6px rgba(255,255,255,.6);animation:xfall linear infinite,xsway ease-in-out infinite alternate}'+
+      '.xmas-snow{position:fixed;inset:0;pointer-events:none;z-index:8;overflow:hidden}'+
+      '.xmas-snow i{position:absolute;top:-8vh;color:#fff;opacity:.85;font-style:normal;text-shadow:0 0 6px rgba(255,255,255,.6);animation:xfall linear infinite,xsway ease-in-out infinite alternate}'+
       '@keyframes xfall{to{transform:translateY(112vh)}}@keyframes xsway{from{margin-left:-14px}to{margin-left:14px}}'+
       '.xmas-lights{display:flex;justify-content:space-between;gap:4px;margin:-8px 0 -6px;padding:0 4px;position:relative;height:26px}'+
       '.xmas-lights::before{content:"";position:absolute;left:0;right:0;top:4px;height:10px;border-bottom:2px solid #2f5d34;border-radius:0 0 50% 50%/0 0 100% 100%}'+
@@ -793,7 +793,7 @@ textarea{min-height:80px;resize:vertical}
       '@keyframes xfly{0%{transform:translate(105vw,3vh) rotate(-6deg)}10%{transform:translate(62vw,calc(var(--vy) - 6vh)) rotate(-10deg)}20%{transform:translate(30vw,var(--vy)) rotate(2deg)}30%{transform:translate(-10vw,calc(var(--vy) - 3vh)) rotate(4deg)}34%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(8deg) scaleX(1)}35%{transform:translate(-20vw,calc(var(--vy) - 8vh)) rotate(-8deg) scaleX(-1)}46%{transform:translate(15vw,var(--vy)) rotate(-2deg) scaleX(-1)}58%{transform:translate(52vw,calc(var(--vy) + 2vh)) rotate(2deg) scaleX(-1)}70%{transform:translate(110vw,4vh) rotate(-12deg) scaleX(-1)}71%,100%{transform:translate(110vw,4vh) scaleX(-1);opacity:0}}'+
       '.xgift{position:fixed;z-index:1;pointer-events:none;font-size:20px;line-height:1;filter:drop-shadow(0 0 6px rgba(255,220,120,.8));animation:xgift var(--t,2.4s) cubic-bezier(.45,0,.9,.6) forwards}'+
       '@keyframes xgift{0%{opacity:0;transform:translate(0,0) scale(.4) rotate(0)}12%{opacity:1;transform:translate(0,6px) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),var(--dy,120px)) scale(.8) rotate(var(--r,40deg))}}'+
-      '.xs-vvid{position:absolute;left:0;bottom:calc(min(64vw,62vh) * -.13);width:100vw;height:min(64vw,62vh);object-fit:cover;object-position:50% 70%;filter:contrast(1.25) brightness(1.02);-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 8%,#000 42%);mask-image:linear-gradient(to bottom,transparent 0,transparent 8%,#000 42%)}'+
+      '.xs-vvid{position:absolute;left:0;bottom:calc(min(64vw,62vh) * -.13);width:100vw;height:min(64vw,62vh);object-fit:cover;object-position:50% 70%;filter:contrast(1.25) brightness(1.02);-webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 30%,#000 48%);mask-image:linear-gradient(to bottom,transparent 0,transparent 30%,#000 48%)}'+
       '.xmas-scene.vid .xs-village{display:none}'+
       '.xs-village{position:absolute;left:0;right:0;bottom:-2px;height:min(34vh,43vw);background:url("https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527777002_cd40802a_1795527777524_cb39089b.png") repeat-x center bottom/auto 100%;animation:xvil 5s ease-in-out infinite}'+
       '@keyframes xvil{50%{filter:brightness(1.15) saturate(1.1)}}'+
@@ -814,7 +814,7 @@ textarea{min-height:80px;resize:vertical}
       document.head.appendChild(st)}
     // neve
     var sn=document.createElement('div');sn.className='xmas-snow';sn.setAttribute('aria-hidden','true');var hs='';
-    for(var i=0;i<38;i++){var sz=(8+Math.random()*14).toFixed(0),du=(7+Math.random()*9).toFixed(1),de=(-Math.random()*16).toFixed(1);
+    for(var i=0;i<60;i++){var sz=(10+Math.random()*16).toFixed(0),du=(8+Math.random()*10).toFixed(1),de=(-Math.random()*18).toFixed(1);
       hs+='<i style="left:'+(Math.random()*100).toFixed(1)+'vw;font-size:'+sz+'px;animation-duration:'+du+'s,'+(2+Math.random()*3).toFixed(1)+'s;animation-delay:'+de+'s,'+de+'s">'+(i%3?'❄':'•')+'</i>'}
     sn.innerHTML=hs;document.body.appendChild(sn);
     var sky=document.createElement('div');sky.className='xmas-sky';sky.setAttribute('aria-hidden','true');var ss='';
@@ -823,12 +823,11 @@ textarea{min-height:80px;resize:vertical}
     // scene di Natale: illustrazioni (slitta con le renne in volo, villaggio innevato, pupazzo di neve) animate
     if(!document.querySelector('.xmas-scene')){
       var sc=document.createElement('div');sc.className='xmas-scene';sc.setAttribute('aria-hidden','true');
-      sc.innerHTML='<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795529259424_4f60d4eb.mp4" autoplay muted loop playsinline preload="auto"></video>'+
-        '<img class="xs-sleigh" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-image/VIGj5si0IDhItSI8dzbB/image_1795527776357_489acf13_1795527776699_f74882db.png" alt="" decoding="async">';
+      sc.innerHTML='<div class="xs-village"></div><video class="xs-vvid" src="https://cdn.openart.ai/openart-ai/production/2026-11/create-video/VIGj5si0IDhItSI8dzbB/sample_0_1795529259424_4f60d4eb.mp4" autoplay muted loop playsinline preload="auto"></video>';
       document.body.appendChild(sc);
       var vv=sc.querySelector('.xs-vvid');if(vv){vv.addEventListener('playing',function(){sc.classList.add('vid')});var pp=vv.play&&vv.play();if(pp&&pp.catch)pp.catch(function(){})}
     }
-    if(!window.__xgift&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))window.__xgift=setInterval(function(){
+    if(window.XMAS_SLEIGH&&!window.__xgift&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches))window.__xgift=setInterval(function(){
       if(document.hidden)return;var s=document.querySelector('.xs-sleigh');if(!s)return;var r=s.getBoundingClientRect();
       if(r.right<0||r.left>innerWidth||r.top<innerHeight*.28)return;
       var m=new DOMMatrix(getComputedStyle(s).transform),flip=m.a<0;
