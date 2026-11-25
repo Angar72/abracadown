@@ -732,7 +732,10 @@ textarea{min-height:80px;resize:vertical}
       var go=function(){if(window.goatcounter&&window.goatcounter.count){try{window.goatcounter.count({path:kind+'-'+sid+'-'+who,title:title+' ('+who+')',event:true});localStorage.setItem(k,'1')}catch(_){}return true}};
       if(!go()){var n=0,t=setInterval(function(){if(go()||++n>20)clearInterval(t)},500)}}
     var played=0,last=null;
-    v.addEventListener('timeupdate',function(){var c=v.currentTime;if(last!==null&&c>last&&c-last<1.5)played+=c-last;last=c;if(played>=5)send('spotvisto','Spot visto')});
+    var vp=0,vdone=false;
+    function volta(){if(vdone)return;vdone=true;var g=function(){if(window.goatcounter&&window.goatcounter.count){try{window.goatcounter.count({path:'spotvolte-'+sid+'-'+who,title:'Spot visione ('+who+')',event:true})}catch(_){}return true}};if(!g()){var n=0,t=setInterval(function(){if(g()||++n>20)clearInterval(t)},500)}}
+    v.addEventListener('ended',function(){vp=0;vdone=false});
+    v.addEventListener('timeupdate',function(){var c=v.currentTime;if(last!==null&&c>last&&c-last<1.5){played+=c-last;vp+=c-last}else if(last!==null&&c<last-2&&c<1){vp=0;vdone=false}last=c;if(played>=5)send('spotvisto','Spot visto');if(vp>=5)volta()});
     v.addEventListener('volumechange',function(){if(!v.muted)send('spotaudio','Spot ascoltato')});
   }
   function spotUI(){
@@ -1117,10 +1120,10 @@ textarea{min-height:80px;resize:vertical}
           var old=$('adm-xmas');if(old)old.remove();$('adm-list').parentNode.insertBefore(d,$('adm-list').nextSibling)})})();
       var sp=STATE.spot; if(sp&&todayD()<=new Date(parse(sp.until).getTime()+2*864e5)){var sid=(sp.id||sp.from||'spot').replace(/[^a-z0-9-]/gi,'');
         var q=function(kind,x){return gcFetch('https://'+window.GC_SITE+'.goatcounter.com/counter/'+encodeURIComponent(kind+'-'+sid+'-'+x.p.replace(/^accesso-/,''))+'.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){return j?f(j.count):0}).catch(function(){return 0})};
-        Promise.all(fam.filter(function(x){return !sp.only||sp.only.indexOf(x.p.replace(/^accesso-/,''))>=0}).map(function(x){return Promise.all([q('spotvisto',x),q('spotaudio',x)]).then(function(a){return {n:x.n,v:a[0],a:a[1]}})})).then(function(rs){
+        Promise.all(fam.filter(function(x){return !sp.only||sp.only.indexOf(x.p.replace(/^accesso-/,''))>=0}).map(function(x){return Promise.all([q('spotvisto',x),q('spotaudio',x),q('spotvolte',x)]).then(function(a){return {n:x.n,v:a[0]||a[2],a:a[1],k:a[2]}})})).then(function(rs){
           var w=rs.filter(function(r){return r.v||r.a});
           var d=document.createElement('div'); d.style.marginTop='14px';
-          d.innerHTML='<h3 style="margin:0 0 6px">🎬 Chi ha guardato il video di Giulia</h3>'+(w.length?'<ul class="acc-list">'+w.map(function(r){return '<li><span>'+esc(r.n)+'</span><span class="acc-yes">'+(r.v?'visto':'')+(r.v&&r.a?' · ':'')+(r.a?'🔊 con audio':'')+'</span></li>'}).join('')+'</ul>':'<p style="margin:0">Nessuno ancora.</p>');
+          d.innerHTML='<h3 style="margin:0 0 6px">🎬 Chi ha guardato il video di Giulia</h3>'+(w.length?'<ul class="acc-list">'+w.map(function(r){return '<li><span>'+esc(r.n)+'</span><span class="acc-yes">'+(r.k?r.k+(r.k===1?' volta':' volte'):(r.v?'visto':''))+(r.v&&r.a?' · ':'')+(r.a?'🔊 con audio':'')+'</span></li>'}).join('')+'</ul>':'<p style="margin:0">Nessuno ancora.</p>');
           var old=$('adm-spot');if(old)old.remove();d.id='adm-spot';$('adm-list').parentNode.insertBefore(d,$('adm-list').nextSibling);
         });
       }
