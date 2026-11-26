@@ -673,7 +673,7 @@ textarea{min-height:80px;resize:vertical}
     var tabs=$('vtabs'),pg=$('bday'),al=$('bday-alert'); if(!tabs||!pg||!al)return;
     tabs.hidden=!L.length; if(!L.length){al.hidden=true;return}
     var t=todayD(), cm=t.getMonth()+1, cd=t.getDate();
-    var mine=L.filter(function(b){return b.m===cm}).sort(function(a,b){return a.g-b.g});
+    var mine=L.filter(function(b){return b.m===cm&&b.g>=cd}).sort(function(a,b){return a.g-b.g});
     var next=L.filter(function(b){return b.m===(cm%12)+1}).sort(function(a,b){return a.g-b.g});
     var items=mine.map(function(b){return '<span class="bd-row">'+bdFace(b.n,40)+'<span>'+esc(b.n)+' – '+b.g+' '+MESI[b.m-1].toLowerCase()+(b.g===cd?'<span class="today">OGGI!</span>':'')+'</span></span>'});
     al.hidden=!mine.length;
