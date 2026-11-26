@@ -327,7 +327,10 @@ textarea{min-height:80px;resize:vertical}
   function parse(d){var p=d.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
   function todayD(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
   function endOf(e){return parse(e.end||e.start)}
-  function isPast(e){return endOf(e)<todayD()}
+  // un appuntamento sparisce 1 ora dopo l'orario (se c'è un orario di fine, 1 ora dopo la fine); senza orario sparisce il giorno dopo
+  function isPast(e){if(endOf(e)<todayD())return true;
+    var tm=String(e.endTime||e.time||'').match(/(\d{1,2})[:.](\d{2})/g);if(!tm||(e.end&&e.end!==e.start&&!e.endTime))return false;
+    var x=tm[tm.length-1].split(/[:.]/),d=endOf(e);d.setHours(+x[0],+x[1]+60,0,0);return new Date()>=d}
   function sorted(list){return list.slice().sort(function(a,b){return a.start<b.start?-1:a.start>b.start?1:(a.time||'')<(b.time||'')?-1:1})}
 
   function whenText(e){
@@ -386,8 +389,9 @@ textarea{min-height:80px;resize:vertical}
       '<div class="title-row"><img class="ev-logo" src="'+LOGO_SRC+'" alt="Abracadown" width="48" height="48"><h4>'+esc(e.title)+'</h4></div>'+(e.img&&!off?'<img class="ev-img" src="'+e.img+'" alt="">':'')+(off?'<div class="cancel-box"><span class="x" aria-hidden="true">✕</span><span>'+esc(typeof e.cancelled==='string'?e.cancelled:'Evento annullato')+'</span></div>':alertBox(e))+chips(e,true)+(e.note&&!off?noteHtml(e.note):'')+(off?'':mapLink(e)+attendees(e))+ed+'</div></article>';
   }
 
+  var pastN=-1;setInterval(function(){try{var n=STATE.events.filter(isPast).length;if(pastN>=0&&n!==pastN)render()}catch(_){}},120000);
   function render(){
-    var t=todayD();
+    var t=todayD();try{pastN=STATE.events.filter(isPast).length}catch(_){}
     // le date passate spariscono da sole: si mostrano solo gli appuntamenti non ancora conclusi
     var upcoming=sorted(STATE.events.filter(function(e){return !isPast(e)}));
     var nx=upcoming.filter(function(e){return !e.cancelled})[0];
