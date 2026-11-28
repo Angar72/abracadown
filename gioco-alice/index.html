@@ -112,6 +112,9 @@
   .festa{position:relative;margin:-6px -6px 10px}
   .fvideo{width:100%;aspect-ratio:16/9;border-radius:18px;display:block;background:#faf4ec;object-fit:cover}
   .fplay{display:none;margin:8px auto 0;font:inherit;font-weight:800;border:none;border-radius:99px;padding:8px 18px;background:#f5f0ff;color:var(--pri);cursor:pointer}
+  .m-fr{background:#3b6fd8} .m-geo{background:#d4547a}
+  .choices.cq{flex-direction:column;align-items:stretch;max-width:360px;margin:0 auto}
+  .choices.cq .ch{font-size:1.2rem;padding:12px 16px;min-width:0}
   .big{font-size:3.5rem;text-align:center;margin:6px 0}
   .score{font-size:1.5rem;text-align:center;font-weight:900}
   .msg{text-align:center;color:var(--muted);margin:8px 0 18px}
@@ -141,7 +144,7 @@
   <h1>✏️ Allenamento di Alice</h1>
   <div class="sub">Allenati con le parole e con i numeri</div>
   <div class="card" id="app"></div>
-  <div class="ver">versione 23 novembre · video dei complimenti</div>
+  <div class="ver">versione 28 novembre · francese e geografia, 15 domande</div>
 </div>
 
 <script>
@@ -182,6 +185,8 @@ const GUIDE = {
 };
 GUIDE.pA = Object.assign({}, GUIDE.e, {domande:['Leggi bene: si aggiunge o si toglie?','Qui si mette insieme… che operazione è?','Fai il calcolo con calma!','Prova a contare sulle dita se serve 😉']});
 GUIDE.pG = Object.assign({}, GUIDE.a, {domande:['Attenta: qualcosa si toglie?','Si toglie o si aggiunge? Pensaci bene!','Fai la sottrazione con calma 🤔','Rileggi il problema, ce la fai!']});
+GUIDE.fr = Object.assign({}, GUIDE.a, {domande:['Parlons français! 🇫🇷 Pensaci bene…','Allez Alice! Quale sarà?','Il francese assomiglia all\'italiano, guarda bene!','Facile facile… o no? 😉']});
+GUIDE.geo = Object.assign({}, GUIDE.e, {domande:['Viaggiamo insieme! 🌍 Dove siamo?','Prendi la cartina… quale città è?','Hai mai sentito questa città?','Che bel viaggio! Pensaci bene 🗺️']});
 const BRAVO = ['Bravissima! 🎉','Esatto! 👏','Perfetto! 🌟','Giusto! 💪','Sei fortissima! ✨'];
 let suonoOn = (function(){try{return localStorage.getItem('suono')!=='off'}catch(e){return true}})();
 let actx = null, timer = null, countdown = null;
@@ -209,7 +214,7 @@ function toggleSuono(){
   document.querySelectorAll('.sbtn').forEach(b=>b.textContent = suonoOn?'🔊':'🔇');
   if(suonoOn) suona('ok');
 }
-const SOGLIA = 8;
+const SOGLIA = 13;
 function oggiStr(d){ d=d||new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function codiceDel(giorno){ let x=2166136261; const s=giorno+'|alice-giulia-abracadown'; for(let i=0;i<s.length;i++){ x^=s.charCodeAt(i); x=Math.imul(x,16777619)>>>0; } return String(1000+(x%9000)); }
 function fattoOggi(){ return leggi('sblocco_'+oggiStr())==='1'; }
@@ -217,9 +222,9 @@ function serie(){ let n=0; const d=new Date(); if(!fattoOggi()) d.setDate(d.getD
 function boxOggi(){
   const ok=fattoOggi(), s=serie();
   return ok ? `<div class="oggi ok">✅ Allenamento di oggi completato!<small>Codice di oggi: <b>${codiceDel(oggiStr())}</b>${s>1?` · 🔥 ${s} giorni di fila`:''}</small><a class="wa" href="${linkPapa()}" target="_blank" rel="noopener">📲 Manda il codice a papà</a></div>`
-            : `<div class="oggi todo">📅 Allenamento di oggi: <b>da fare</b><small>Fai almeno ${SOGLIA} su 10 per ricevere il codice di sblocco${s>0?` · 🔥 serie di ${s} giorni, non perderla!`:''}</small></div>`;
+            : `<div class="oggi todo">📅 Allenamento di oggi: <b>da fare</b><small>Fai almeno ${SOGLIA} su ${PER_GIRO} per ricevere il codice di sblocco${s>0?` · 🔥 serie di ${s} giorni, non perderla!`:''}</small></div>`;
 }
-const NOMI_MODO = {e:'e / è', a:'a / ha', mix:'Tutto mescolato', p:'Problemi + e −'};
+const NOMI_MODO = {e:'e / è', a:'a / ha', mix:'Tutto mescolato', p:'Problemi + e −', fr:'Francese', geo:'Geografia'};
 function pulisci(s){ return String(s).replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); }
 function creaReport(punti, totale, errs, superato){
   const s = stats();
@@ -244,7 +249,7 @@ function creaReport(punti, totale, errs, superato){
 }
 function linkPapa(p){
   let t = leggi('report_'+oggiStr());
-  if(!t) t = `Ciao papà! Ho fatto l'allenamento di oggi${p!=null?': '+p+'/10':''} ✅ Codice di sblocco: ${codiceDel(oggiStr())}`;
+  if(!t) t = `Ciao papà! Ho fatto l'allenamento di oggi${p!=null?': '+p+'/'+PER_GIRO:''} ✅ Codice di sblocco: ${codiceDel(oggiStr())}`;
   return 'https://wa.me/?text='+encodeURIComponent(t);
 }
 function linkReport(t){ return 'https://wa.me/?text='+encodeURIComponent(t); }
@@ -273,7 +278,7 @@ function avviaFesta(){
   if(p && p.catch) p.catch(()=>{ v.muted=true; v.play().catch(()=>{}); mostra(); });
   if(!suonoOn) mostra();
 }
-const PER_GIRO = 10;
+const PER_GIRO = 15;
 const app = document.getElementById('app');
 let giro = [], idx = 0, punti = 0, errori = [], modo = '';
 
@@ -333,8 +338,10 @@ async function home(intro){
         <div class="modes" id="modes">
           <button class="mode m-e" onclick="inizia('e')">e oppure è ?<small>Congiunzione o verbo essere</small></button>
           <button class="mode m-a" onclick="inizia('a')">a oppure ha ?<small>Preposizione o verbo avere</small></button>
-          <button class="mode m-mix" onclick="inizia('mix')">Tutto mescolato 🎲<small>Frasi e problemi insieme</small></button>
+          <button class="mode m-mix" onclick="inizia('mix')">Tutto mescolato 🎲<small>Un po' di tutto: frasi, problemi, francese, geografia</small></button>
           <button class="mode m-p" onclick="inizia('p')">Problemi ➕➖<small>Addizioni e sottrazioni</small></button>
+          <button class="mode m-fr" onclick="inizia('fr')">Francese 🇫🇷<small>Parole e frasi del 1° livello</small></button>
+          <button class="mode m-geo" onclick="inizia('geo')">Geografia 🌍<small>Capoluoghi italiani e città europee</small></button>
         </div>
       </div>
       <div class="side right" id="sideG"><img id="imgG" src="${IMG.g1}" alt="Giulia" style="--gc:var(--a)"><span>Giulia</span></div>
@@ -422,14 +429,87 @@ function creaProblema(){
   return [testo, String(ris), 'p', scelte, spieg, somma?'pA':'pG', String(sbagliata), somma];
 }
 
+
+// ---------- FRANCESE (1° livello) e GEOGRAFIA ----------
+const FR_IT2FR = [ // [italiano, francese giusto, sbagliato1, sbagliato2]
+  ['cane','chien','chat','cheval'], ['gatto','chat','chien','poisson'], ['casa','maison','voiture','école'],
+  ['scuola','école','église','maison'], ['libro','livre','lit','lune'], ['mela','pomme','poire','pain'],
+  ['pane','pain','pied','pomme'], ['acqua','eau','œuf','air'], ['sole','soleil','sel','lune'],
+  ['luna','lune','lait','soleil'], ['rosso','rouge','rose','vert'], ['verde','vert','bleu','jaune'],
+  ['giallo','jaune','jeune','blanc'], ['blu','bleu','blanc','noir'], ['bianco','blanc','noir','bleu'],
+  ['nero','noir','neuf','blanc'], ['due','deux','douze','dix'], ['tre','trois','treize','trente'],
+  ['dieci','dix','deux','six'], ['madre','mère','mer','père'], ['padre','père','mère','frère'],
+  ['sorella','sœur','frère','fille'], ['fratello','frère','père','fraise'], ['lunedì','lundi','mardi','mercredi'],
+  ['domenica','dimanche','samedi','lundi'], ['mangiare','manger','marcher','boire'], ['bere','boire','dormir','manger'],
+  ['dormire','dormir','danser','courir'], ['io sono','je suis','j’ai','tu es'], ['io ho','j’ai','je suis','il a'],
+];
+const FR_FR2IT = [ // [francese, italiano giusto, sbagliato1, sbagliato2]
+  ['Bonjour','Buongiorno','Buonanotte','Arrivederci'], ['Merci','Grazie','Prego','Scusa'],
+  ['Au revoir','Arrivederci','Buongiorno','Per favore'], ['S’il te plaît','Per favore','Grazie','Mi dispiace'],
+  ['Bonne nuit','Buonanotte','Buongiorno','Buon pomeriggio'], ['Oui','Sì','No','Forse'], ['Non','No','Sì','Grazie'],
+  ['la fille','la ragazza','il ragazzo','la famiglia'], ['le garçon','il ragazzo','la ragazza','il gatto'],
+  ['l’ami','l’amico','il nemico','l’anima'], ['le chat','il gatto','il cane','il cavallo'],
+  ['la pomme','la mela','la pera','la patata'], ['rouge','rosso','rosa','verde'], ['l’école','la scuola','la chiesa','la stella'],
+];
+const FR_FRASI = [ // [domanda, giusta, sbagliata1, sbagliata2, spiegazione]
+  ['Come si dice «Mi chiamo Alice» in francese?','Je m’appelle Alice','Tu t’appelles Alice','Il s’appelle Alice','«Je m’appelle» vuol dire <b>io mi chiamo</b>. «Tu t’appelles» è «tu ti chiami».'],
+  ['Come si dice «Come stai?» in francese?','Comment ça va ?','Quel âge as-tu ?','Où es-tu ?','«Comment ça va ?» vuol dire <b>come va? / come stai?</b>'],
+  ['Come si dice «Quanti anni hai?» in francese?','Quel âge as-tu ?','Comment ça va ?','Où habites-tu ?','«Quel âge as-tu ?» vuol dire <b>quanti anni hai?</b> (âge = età).'],
+  ['«Maison» è femminile. Quale articolo ci vuole? «___ maison»','la','le','les','«Maison» (casa) è femminile, quindi <b>la maison</b>.'],
+  ['«Livre» è maschile. Quale articolo ci vuole? «___ livre»','le','la','les','«Livre» (libro) è maschile, quindi <b>le livre</b>.'],
+];
+const CAPOLUOGHI = [ // [regione, capoluogo, altra città, altra città]
+  ['Abruzzo','L’Aquila','Pescara','Chieti'], ['Basilicata','Potenza','Matera','Melfi'], ['Calabria','Catanzaro','Reggio Calabria','Cosenza'],
+  ['Campania','Napoli','Salerno','Caserta'], ['Emilia-Romagna','Bologna','Modena','Parma'], ['Friuli-Venezia Giulia','Trieste','Udine','Pordenone'],
+  ['Lazio','Roma','Latina','Viterbo'], ['Liguria','Genova','La Spezia','Savona'], ['Lombardia','Milano','Bergamo','Brescia'],
+  ['Marche','Ancona','Pesaro','Macerata'], ['Molise','Campobasso','Isernia','Termoli'], ['Piemonte','Torino','Novara','Asti'],
+  ['Puglia','Bari','Lecce','Foggia'], ['Sardegna','Cagliari','Sassari','Olbia'], ['Sicilia','Palermo','Catania','Messina'],
+  ['Toscana','Firenze','Pisa','Siena'], ['Trentino-Alto Adige','Trento','Bolzano','Merano'], ['Umbria','Perugia','Terni','Assisi'],
+  ["Valle d’Aosta",'Aosta','Courmayeur','Cervinia'], ['Veneto','Venezia','Verona','Padova'],
+];
+const CAPITALI = [ // [della nazione, capitale, altra città, altra città]
+  ['della Francia','Parigi','Lione','Marsiglia'], ['della Spagna','Madrid','Barcellona','Siviglia'], ['della Germania','Berlino','Monaco di Baviera','Amburgo'],
+  ['del Regno Unito','Londra','Manchester','Liverpool'], ['del Portogallo','Lisbona','Porto','Faro'], ['della Grecia','Atene','Salonicco','Patrasso'],
+  ["dell’Austria",'Vienna','Salisburgo','Innsbruck'], ['della Svizzera','Berna','Zurigo','Ginevra'], ['del Belgio','Bruxelles','Anversa','Bruges'],
+  ["dell’Irlanda",'Dublino','Cork','Galway'], ['della Polonia','Varsavia','Cracovia','Danzica'], ['della Svezia','Stoccolma','Göteborg','Malmö'],
+  ['della Norvegia','Oslo','Bergen','Stavanger'], ['della Danimarca','Copenaghen','Aarhus','Odense'], ['della Croazia','Zagabria','Spalato','Dubrovnik'],
+  ["dell’Ungheria",'Budapest','Debrecen','Seghedino'], ['della Repubblica Ceca','Praga','Brno','Ostrava'], ['della Finlandia','Helsinki','Tampere','Turku'],
+];
+const CITTA_NAZIONE = [ // [città, nazione giusta, sbagliata1, sbagliata2]
+  ['Barcellona','Spagna','Portogallo','Francia'], ['Monaco di Baviera','Germania','Austria','Svizzera'], ['Amsterdam','Paesi Bassi','Belgio','Danimarca'],
+  ['Salisburgo','Austria','Germania','Svizzera'], ['Lione','Francia','Belgio','Svizzera'], ['Porto','Portogallo','Spagna','Grecia'],
+  ['Edimburgo','Regno Unito','Irlanda','Norvegia'], ['Cracovia','Polonia','Ungheria','Repubblica Ceca'], ['Ginevra','Svizzera','Francia','Belgio'],
+  ['Siviglia','Spagna','Italia','Portogallo'], ['Atene','Grecia','Croazia','Spagna'], ['Bruges','Belgio','Paesi Bassi','Francia'],
+];
+function quizItem(dom, giusta, sb1, sb2, spieg, gk){ return [dom, giusta, 'q', mescola([giusta, sb1, sb2]), spieg, gk]; }
+function domandeFrancese(){
+  const out = [];
+  FR_IT2FR.forEach(([it,fr,a,b])=>out.push(()=>quizItem(`Come si dice «${it}» in francese? 🇫🇷`, fr, a, b, `In francese «${it}» si dice <b>${fr}</b>.`, 'fr')));
+  FR_FR2IT.forEach(([fr,it,a,b])=>out.push(()=>quizItem(`Cosa vuol dire «${fr}» in italiano? 🇫🇷`, it, a, b, `«${fr}» vuol dire <b>${it}</b>.`, 'fr')));
+  FR_FRASI.forEach(([d,g,a,b,s])=>out.push(()=>quizItem(d+' 🇫🇷', g, a, b, s, 'fr')));
+  return out;
+}
+function domandeGeografia(){
+  const out = [];
+  CAPOLUOGHI.forEach(([r,c,a,b])=>out.push(()=>quizItem(`Qual è il capoluogo della regione ${r}? 🇮🇹`, c, a, b, `Il capoluogo della regione ${r} è <b>${c}</b>. ${a} e ${b} sono altre città della regione.`, 'geo')));
+  CAPITALI.forEach(([n,c,a,b])=>out.push(()=>quizItem(`Qual è la capitale ${n}? 🌍`, c, a, b, `La capitale ${n} è <b>${c}</b>. ${a} e ${b} sono altre città della stessa nazione.`, 'geo')));
+  CITTA_NAZIONE.forEach(([c,n,a,b])=>out.push(()=>quizItem(`In quale nazione si trova ${c}? 🌍`, n, a, b, `${c} si trova in <b>${n}</b>.`, 'geo')));
+  return out;
+}
+function prendi(gen, n){ return mescola(gen()).slice(0,n).map(f=>f()); }
+
+function isQ(t){ return t==='p'||t==='q'; }
+
 function inizia(m){
   modo = m;
   if(m==='p'){ giro=[]; for(let i=0;i<PER_GIRO;i++) giro.push(creaProblema()); idx=0; punti=0; errori=[]; domanda(); return; }
+  if(m==='fr'){ giro=prendi(domandeFrancese,PER_GIRO); idx=0; punti=0; errori=[]; domanda(); return; }
+  if(m==='geo'){ giro=prendi(domandeGeografia,PER_GIRO); idx=0; punti=0; errori=[]; domanda(); return; }
   if(m==='mix'){
     const e3 = mescola(DATI.e).slice(0,3).map(x=>[...x,'e']);
     const a3 = mescola(DATI.a).slice(0,3).map(x=>[...x,'a']);
-    const p4 = [creaProblema(),creaProblema(),creaProblema(),creaProblema()];
-    giro = mescola([...e3,...a3,...p4]); idx=0; punti=0; errori=[]; domanda(); return;
+    const p3 = [creaProblema(),creaProblema(),creaProblema()];
+    giro = mescola([...e3,...a3,...p3,...prendi(domandeFrancese,3),...prendi(domandeGeografia,3)]); idx=0; punti=0; errori=[]; domanda(); return;
   }
   let pool = m==='e' ? DATI.e.map(x=>[...x,'e']) : m==='a' ? DATI.a.map(x=>[...x,'a']) : [...DATI.e.map(x=>[...x,'e']),...DATI.a.map(x=>[...x,'a'])];
   giro = mescola(pool).slice(0,PER_GIRO); idx=0; punti=0; errori=[];
@@ -438,17 +518,17 @@ function inizia(m){
 
 function domanda(){
   const [frase, giusta, tipo] = giro[idx];
-  const gk = tipo==='p' ? giro[idx][5] : tipo;
+  const gk = isQ(tipo) ? giro[idx][5] : tipo;
   const scelte = tipo==='e' ? ['e','è'] : tipo==='a' ? ['a','ha'] : giro[idx][3];
-  const parti = tipo==='p' ? [`<span class="probl">${frase}</span><br><span class="rlab">Risposta: </span>`, ''] : frase.split('___');
+  const parti = isQ(tipo) ? [`<span class="probl">${frase}</span><br><span class="rlab">${tipo==='p'?'Risposta: ':''}</span>`, ''] : frase.split('___');
   app.innerHTML = `
     <div class="top"><span>Domanda ${idx+1} di ${giro.length}</span><span>📚 <span id="totq">${num('tot_esercizi')}</span> &nbsp;⭐ ${punti} <button class="sbtn" onclick="toggleSuono()">${suonoOn?'🔊':'🔇'}</button></span></div>
     <div class="bar"><i style="width:${idx/giro.length*100}%"></i></div>
     <div id="guida">${guida(gk, GUIDE[gk].pensa, pick(GUIDE[gk].domande))}</div>
     <div class="sentence">${parti[0]}<span class="blank" id="blank">?</span>${parti[1]}</div>
-    <div class="choices">${scelte.map(s=>`<button class="ch" onclick="rispondi(this,'${s}')">${s}</button>`).join('')}</div>
+    <div class="choices${tipo==='q'?' cq':''}">${(window.SCELTE=scelte).map((s,i)=>`<button class="ch" onclick="rispondi(this, SCELTE[${i}])">${s}</button>`).join('')}</div>
     <button class="hintbtn" id="hb" onclick="document.getElementById('hint').style.display='block';this.style.display='none'">💡 Aiutino</button>
-    <div class="hint" id="hint">${tipo==='e' ? 'Prova a mettere <b>"era"</b> al posto dello spazio: ha senso?' : tipo==='a' ? 'Prova a mettere <b>"aveva"</b> al posto dello spazio: ha senso?' : 'Se qualcosa si <b>aggiunge</b> o si mette insieme → <b>+</b>. Se qualcosa si <b>toglie</b> o si cerca quanto <b>manca</b> → <b>−</b>.'}</div>
+    <div class="hint" id="hint">${tipo==='e' ? 'Prova a mettere <b>"era"</b> al posto dello spazio: ha senso?' : tipo==='a' ? 'Prova a mettere <b>"aveva"</b> al posto dello spazio: ha senso?' : tipo==='q' ? (giro[idx][5]==='fr' ? 'Pensa a parole italiane simili: spesso il francese assomiglia all\'italiano! 😉' : 'Pensa alla cartina: è la città più importante, quella del governo 🗺️') : 'Se qualcosa si <b>aggiunge</b> o si mette insieme → <b>+</b>. Se qualcosa si <b>toglie</b> o si cerca quanto <b>manca</b> → <b>−</b>.'}</div>
     <div class="fb" id="fb"></div>
     <div class="auto" id="auto"><i id="autobar"></i></div>`;
   avviaTempo();
@@ -458,18 +538,18 @@ function avviaTempo(){}
 
 function spiegaDi(it){
   const [frase, giusta, tipo] = it;
-  if(tipo==='p') return it[4];
+  if(isQ(tipo)) return it[4];
   const haSenso = (giusta==='è'||giusta==='ha');
   return tipo==='e'
     ? (haSenso ? `Qui c'è il verbo <b>essere</b>, quindi ci vuole <b>è</b> con l'accento.` : `Qui <b>e</b> serve a unire due cose, come "e anche". Niente accento!`)
     : (haSenso ? `Qui c'è il verbo <b>avere</b>, quindi ci vuole <b>ha</b> con l'acca.` : `Qui <b>a</b> è una preposizione (dove? a chi? quando?). Niente acca!`);
 }
 function trucco(it){
-  const [frase, giusta, tipo] = it; if(tipo==='p') return '';
+  const [frase, giusta, tipo] = it; if(isQ(tipo)) return '';
   const prova = tipo==='e' ? 'era' : 'aveva'; const haSenso = (giusta==='è'||giusta==='ha');
   return `Prova con "${prova}": «${pulisci(frase.replace('___', prova))}» → ${haSenso?'ha senso, quindi ci vuole '+giusta:'non ha senso, quindi ci vuole '+giusta}`;
 }
-function nomeGuida(it){ const gk = it[2]==='p' ? it[5] : it[2]; return GUIDE[gk].nome; }
+function nomeGuida(it){ const gk = isQ(it[2]) ? it[5] : it[2]; return GUIDE[gk].nome; }
 
 function rispondi(btn, scelta){
   const [frase, giusta, tipo] = giro[idx];
@@ -482,11 +562,11 @@ function rispondi(btn, scelta){
   bl.textContent = giusta; bl.classList.add(ok?'ok':'ko');
   document.getElementById('hb').style.display='none';
   document.getElementById('hint').style.display='none';
-  const gk = tipo==='p' ? giro[idx][5] : tipo;
+  const gk = isQ(tipo) ? giro[idx][5] : tipo;
   const prova = tipo==='e' ? 'era' : 'aveva';
   const fraseProva = frase.replace('___', `<u>${prova}</u>`);
   const haSenso = (giusta==='è'||giusta==='ha');
-  const spieg = tipo==='p' ? giro[idx][4] : tipo==='e'
+  const spieg = isQ(tipo) ? giro[idx][4] : tipo==='e'
     ? (haSenso ? `Qui c'è il verbo <b>essere</b>, quindi ci vuole <b>è</b> con l'accento.` : `Qui <b>e</b> serve a unire due cose, come "e anche". Niente accento!`)
     : (haSenso ? `Qui c'è il verbo <b>avere</b>, quindi ci vuole <b>ha</b> con l'acca.` : `Qui <b>a</b> è una preposizione (dove? a chi? quando?). Niente acca!`);
   const fb = document.getElementById('fb');
@@ -494,9 +574,9 @@ function rispondi(btn, scelta){
   const G = GUIDE[gk];
   document.getElementById('guida').innerHTML = ok
     ? guida(gk, pick(G.ok), pick(BRAVO), 'pop')
-    : guida(gk, G.ko, `${pick(['Ops!','Quasi!','Niente paura!','Ci sei quasi!'])} Ci voleva <b>"${giusta}"</b>.<br>${spieg}${tipo==='p'?'':'<br><span class="tb">🔎 '+trucco(giro[idx])+'</span>'}`, 'shake');
+    : guida(gk, G.ko, `${pick(['Ops!','Quasi!','Niente paura!','Ci sei quasi!'])} Ci voleva <b>"${giusta}"</b>.<br>${spieg}${isQ(tipo)?'':'<br><span class="tb">🔎 '+trucco(giro[idx])+'</span>'}`, 'shake');
   fb.innerHTML = ok ? `<b>Risposta giusta: "${giusta}"</b><br>${spieg}
-    ${tipo==='p' ? '' : `<div class="trick">Prova con "${prova}": «${fraseProva}» → ${haSenso?'ha senso ✅':'non ha senso ❌'}</div>`}`
+    ${isQ(tipo) ? '' : `<div class="trick">Prova con "${prova}": «${fraseProva}» → ${haSenso?'ha senso ✅':'non ha senso ❌'}</div>`}`
     : `<b>Leggi bene cosa ti spiega ${GUIDE[gk].nome} 👆</b><br><button class="capito" onclick="avanti()">Ho capito ➜</button>`;
   if(ok) punti++; else errori.push([frase,giusta,scaduto?'tempo scaduto':scelta, giro[idx]]);
   salva('tot_esercizi', num('tot_esercizi')+1); if(ok) salva('tot_giuste', num('tot_giuste')+1);
@@ -528,7 +608,7 @@ function fine(){
     <div class="score">${punti} su ${giro.length}</div>
     <div class="msg">${msg}${nuovo&&rec>0?'<br>🎊 Nuovo record!':''}</div>
     ${superato ? `<div class="sblocco"><div>🔓 Ce l'hai fatta! Ecco il codice di oggi</div><div class="cod">${codiceDel(oggiStr())}</div><div class="small">Mandalo a papà per sbloccare il telefono</div><a class="wa wabig" href="${linkPapa(punti)}" target="_blank" rel="noopener">📲 Manda il codice a papà</a></div>`
-               : `<div class="sblocco no"><div>🔒 Servono almeno ${SOGLIA} risposte giuste su 10 per il codice di sblocco.</div><div class="small">Ne hai fatte ${punti}: riprova, ce la puoi fare! 💪</div><a class="wa" href="${linkReport(report)}" target="_blank" rel="noopener">📲 Manda il resoconto a papà</a></div>`}
+               : `<div class="sblocco no"><div>🔒 Servono almeno ${SOGLIA} risposte giuste su ${PER_GIRO} per il codice di sblocco.</div><div class="small">Ne hai fatte ${punti}: riprova, ce la puoi fare! 💪</div><a class="wa" href="${linkReport(report)}" target="_blank" rel="noopener">📲 Manda il resoconto a papà</a></div>`}
     ${errori.length?`<b>Da ripassare:</b><div class="rev">${errori.map(([f,g,s])=>`<div>${f.includes('___') ? f.replace('___',`<span class="c">${g}</span>`) : f+' → <span class="c">'+g+'</span>'} <span style="color:var(--muted)">(avevi messo "${s}")</span></div>`).join('')}</div>`:''}
     <div class="btns">
       <button class="btn" onclick="inizia(modo)">Gioca ancora</button>
